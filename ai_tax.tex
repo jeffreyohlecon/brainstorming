@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{The Price Elasticity of AI Demand}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Question}
+
+How elastic is consumer demand for AI subscriptions?
+
+\section*{Setting}
+
+Chicago levies the Personal Property Lease Transaction Tax (PPLTT) on cloud software, including AI subscriptions. No other major US city does this. The rate increased twice:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Date & Rate & Change \\
+\midrule
+Pre-2025 & 9\% & --- \\
+January 2025 & 11\% & +2pp \\
+January 2026 & 15\% & +4pp \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Anthropic passes through the tax in full. OpenAI pass-through needs verification.
+
+\section*{Identification}
+
+Difference-in-differences comparing AI subscription churn in Chicago versus surrounding suburbs.
+
+\textbf{Treatment:} Chicago ZIP3s (606, 608)
+
+\textbf{Control:} Suburban Cook County and collar counties (600--605, 607)
+
+\textbf{Unit:} Individual cardholder $\times$ month
+
+\textbf{Outcome:} Churn (no AI subscription transaction for $k$ consecutive months after prior subscription)
+
+\section*{Specification}
+
+\begin{equation}
+\text{Churn}_{it} = \beta_1 (\text{Chicago}_i \times \text{Post2025}_t) + \beta_2 (\text{Chicago}_i \times \text{Post2026}_t) + \gamma_i + \delta_t + \epsilon_{it}
+\end{equation}
+
+$\gamma_i$ = cardholder fixed effects
+
+$\delta_t$ = month fixed effects
+
+$\beta_1$ identifies the effect of the 2pp increase; $\beta_2$ identifies the cumulative effect through the 4pp increase.
+
+\section*{Data}
+
+Individual-level credit and debit card panel. Can isolate transactions to OpenAI, Anthropic, and related AI merchants. ZIP3 geography links cardholders to Chicago vs.\ suburbs.
+
+\section*{Contribution}
+
+First causal estimate of the price elasticity of demand for AI tools.
+
+\section*{What Could Kill This}
+
+\begin{enumerate}
+\item \textbf{Sample size.} Fewer than 500 Chicago AI subscribers pre-2025 means too little power.
+\item \textbf{No pass-through.} If OpenAI absorbs the tax, only Anthropic users are treated—smaller sample.
+\item \textbf{Pre-trends.} If Chicago and suburban churn rates were already diverging before January 2025, the DiD is contaminated.
+\item \textbf{Billing avoidance.} If Chicago users switch billing addresses to suburbs, true treatment effect is attenuated.
+\end{enumerate}
+
+\section*{Extensions (If Core Works)}
+
+\begin{itemize}
+\item Heterogeneity by income (proxy: total card spend)
+\item Heterogeneity by self-employment (proxy: business-related spending)
+\item Welfare calculation using external productivity estimates
+\end{itemize}
+
+These are gravy. The elasticity is the contribution.
+
+\end{document}
