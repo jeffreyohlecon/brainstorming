@@ -1,0 +1,77 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+\title{Chicago PPLTT and ChatGPT Subscriptions}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Background}
+
+Chicago's Personal Property Lease Transaction Tax (PPLTT) applies to AI subscription services including ChatGPT Plus. The tax rate increased from 9\% (October 2023) to 11\% (January 2025).
+
+\section{Pass-Through Evidence}
+
+Figure~\ref{fig:price} shows the median transaction amount for ChatGPT subscriptions in Chicago (zip3 606). The base ChatGPT Plus price is \$20/month. Full pass-through would imply prices of \$21.80 at 9\% and \$22.20 at 11\%.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chicago_chatgpt_median_price.png}
+    \caption{Median transaction amount for ChatGPT subscriptions in Chicago. Horizontal lines indicate expected prices under full pass-through. The IQR band shows the 25th--75th percentile range.}
+    \label{fig:price}
+\end{figure}
+
+Observed median prices are slightly below full pass-through (\$21.36 vs \$21.80 during the 9\% period; \$21.95 vs \$22.20 during the 11\% period), suggesting pass-through is high but not complete.
+
+\section{Quantity Effects}
+
+\subsection{Raw Time Series}
+
+Figure~\ref{fig:raw} compares log transactions in Chicago to the simple mean of 93 size-matched control zip3s. Controls are selected as zip3s with transaction counts within 50\% of Chicago's count during January--June 2023.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chicago_raw_counts.png}
+    \caption{Raw time series of log transactions: Chicago vs.\ mean of 93 size-matched control zip3s.}
+    \label{fig:raw}
+\end{figure}
+
+\subsection{Event Study}
+
+Figure~\ref{fig:did} presents event study estimates from a difference-in-differences specification:
+\[
+\log(\text{transactions}_{zt}) = \sum_{\tau \neq \text{Sep 2023}} \beta_\tau \cdot \mathbf{1}[\text{Chicago}] \cdot \mathbf{1}[\text{month} = \tau] + \alpha_z + \gamma_t + \varepsilon_{zt}
+\]
+Standard errors are clustered at the zip3 level.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{chicago_did.png}
+    \caption{Event study coefficients for Chicago relative to 93 size-matched control zip3s. Reference period is September 2023. Error bars show 95\% confidence intervals. Light red shading indicates the 9\% tax period; darker red indicates 11\%.}
+    \label{fig:did}
+\end{figure}
+
+The pooled DiD coefficient is $-0.19$ (se $= 0.02$), implying Chicago subscriptions fell approximately 17\% relative to controls after the tax. Separating by tax rate:
+\begin{itemize}
+    \item 9\% period (Oct 2023--Dec 2024): coefficient $\approx -0.08$, elasticity $\approx -1$
+    \item 11\% period (Jan 2025+): coefficient $\approx -0.33$, elasticity $\approx -3$
+\end{itemize}
+
+Pre-trends are not perfectly flat (joint F-test rejects), but magnitudes are small (mean $|\text{coef}| = 0.05$) relative to post-treatment effects.
+
+\section{Discussion}
+
+The evidence suggests:
+\begin{enumerate}
+    \item Pass-through is high but slightly incomplete
+    \item Quantity declined relative to controls, with the effect growing at higher tax rates
+    \item Implied elasticity is around $-1$ at 9\% and $-3$ at 11\%, consistent with demand becoming more elastic at higher prices
+\end{enumerate}
+
+\end{document}
