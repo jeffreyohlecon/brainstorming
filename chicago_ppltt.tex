@@ -22,8 +22,8 @@ Figure~\ref{fig:price} shows the median transaction amount for ChatGPT subscript
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{chicago_chatgpt_median_price.png}
-    \caption{Median transaction amount for ChatGPT subscriptions in Chicago. Horizontal lines indicate expected prices under full pass-through. The IQR band shows the 25th--75th percentile range.}
+    \includegraphics[width=0.9\textwidth]{output/trans/all/all_merchants/chicago_chatgpt_median_price.png}
+    \caption{Median transaction amount for ChatGPT subscriptions in Chicago (full sample). Horizontal lines indicate expected prices under full pass-through. The IQR band shows the 25th--75th percentile range.}
     \label{fig:price}
 \end{figure}
 
@@ -37,12 +37,14 @@ Figure~\ref{fig:raw} compares log transactions in Chicago to the simple mean of 
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{chicago_raw_counts.png}
+    \includegraphics[width=0.9\textwidth]{output/trans/all/all_merchants/chicago_raw_counts.png}
     \caption{Raw time series of log transactions: Chicago vs.\ mean of 93 size-matched control zip3s.}
     \label{fig:raw}
 \end{figure}
 
 \subsection{Event Study}
+
+We do two specifications, one with all transactions, and one that restricts to transactions between \$15--25, which isolates ChatGPT Plus subscriptions (\$20 base price plus tax variation across jurisdictions). This excludes API usage and large enterprise purchases, dropping about 6\% of transactions. The sample runs from March 2023 through November 2024. We drop February 2023 (the ChatGPT Plus launch month) because early adoption patterns differ sharply across regions, creating spurious pre-trend violations.
 
 Figure~\ref{fig:did} presents event study estimates from a difference-in-differences specification:
 \[
@@ -50,20 +52,20 @@ Figure~\ref{fig:did} presents event study estimates from a difference-in-differe
 \]
 Standard errors are clustered at the zip3 level.
 
+
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{chicago_did.png}
+    \includegraphics[width=0.9\textwidth]{output/trans/all/all_merchants/chicago_did.png}
     \caption{Event study coefficients for Chicago relative to 93 size-matched control zip3s. Reference period is September 2023. Error bars show 95\% confidence intervals. Light red shading indicates the 9\% tax period; darker red indicates 11\%.}
     \label{fig:did}
 \end{figure}
 
-The pooled DiD coefficient is $-0.19$ (se $= 0.02$), implying Chicago subscriptions fell approximately 17\% relative to controls after the tax. Separating by tax rate:
-\begin{itemize}
-    \item 9\% period (Oct 2023--Dec 2024): coefficient $\approx -0.08$, elasticity $\approx -1$
-    \item 11\% period (Jan 2025+): coefficient $\approx -0.33$, elasticity $\approx -3$
-\end{itemize}
-
-Pre-trends are not perfectly flat (joint F-test rejects), but magnitudes are small (mean $|\text{coef}| = 0.05$) relative to post-treatment effects.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{output/trans/15to25/all_merchants/chicago_did.png}
+    \caption{Event study coefficients for Chicago relative to 93 size-matched control zip3s. Reference period is September 2023. Error bars show 95\% confidence intervals. Light red shading indicates the 9\% tax period; darker red indicates 11\%.}
+    \label{fig:did_restrct}
+\end{figure}
 
 \section{Discussion}
 
@@ -71,7 +73,11 @@ The evidence suggests:
 \begin{enumerate}
     \item Pass-through is high but slightly incomplete
     \item Quantity declined relative to controls, with the effect growing at higher tax rates
-    \item Implied elasticity is around $-1$ at 9\% and $-3$ at 11\%, consistent with demand becoming more elastic at higher prices
+    \item Implied elasticity is around $-1$ if we believe these estimates
 \end{enumerate}
+
+\paragraph{Elasticity interpretation.} We observe transaction prices in all zip3s but do not know the underlying tax rates. The elasticity calculation uses Chicago's known tax rate (9\%) as the price change, implicitly assuming control prices remained constant. If control zip3s also experienced price increases, the true elasticity would be smaller in magnitude.
+
+\paragraph{Potential confound: employer-paid subscriptions.} ChatGPT Enterprise launched in August 2023 (\$60/user/month, 150-seat minimum). ChatGPT Team launched in January 2024 (\$25--30/user/month). If Chicago employers (e.g., University of Chicago) adopted enterprise licenses in late 2023 or early 2024, affected users would disappear from personal credit card data---either because billing shifted to corporate accounts, or because the per-seat price exceeds our \$15--25 filter. This would produce a Chicago-specific decline unrelated to the tax. The timing of our observed decline (emerging around early 2024, growing through the year) is consistent with gradual enterprise rollout.
 
 \end{document}

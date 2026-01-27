@@ -13,14 +13,14 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pathlib import Path
+from load_chatgpt_data import load_with_zip3, log, get_filter_suffix, get_filter_title, get_outcome_column
 
-DATA_DIR = Path("/Users/jeffreyohl/Dropbox/Gambling Papers and Data/CEdge data")
 OUTPUT_DIR = Path(__file__).parent
 
 TREATED_ZIP = '606'
 START_DATE = '2023-02-01'  # ChatGPT Plus launch
 FIT_CUTOFF = '2023-10-01'
-END_DATE = '2025-01-01'  # Exclude 11% period
+END_DATE = '2024-12-01'  # Exclude ChatGPT Pro period
 SIZE_WINDOW = 0.5  # Donors must be within 50% of Chicago's size
 
 EVENTS = {
@@ -29,29 +29,8 @@ EVENTS = {
 }
 
 
-def log(msg):
-    from datetime import datetime
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
-
-
 def main():
-    log("Loading transactions...")
-    dfs = []
-    for year in [2023, 2024, 2025]:
-        f = DATA_DIR / f"chatgpt_transactions_{year}.parquet"
-        if f.exists():
-            dfs.append(pd.read_parquet(f))
-    trans = pd.concat(dfs, ignore_index=True)
-
-    trans = trans[trans['service'].str.lower().isin(['chatgpt', 'openai'])]
-    log(f"ChatGPT/OpenAI: {len(trans):,}")
-
-    log("Loading demographics...")
-    demo = pd.read_csv(DATA_DIR / "chatgpt_demographics_2023_2024_2025.csv", low_memory=False)
-    trans = trans.merge(demo[['cardid', 'zip3']], on='cardid', how='left')
-    trans['zip3'] = trans['zip3'].astype(str)
-    trans['trans_date'] = pd.to_datetime(trans['trans_date'])
-    trans['trans_amount'] = pd.to_numeric(trans['trans_amount'], errors='coerce')
+    trans = load_with_zip3()
 
     # Select donors based on Feb-Jun 2023 size (post ChatGPT Plus launch)
     log("Selecting size-matched donors...")
@@ -88,8 +67,9 @@ def main():
     ).reset_index()
     monthly['month_dt'] = monthly['month'].dt.to_timestamp()
 
-    # Pivot to wide format - use log transactions
-    pivot_trans = monthly.pivot(index='month_dt', columns='zip3', values='n_transactions')
+    # Pivot to wide format
+    outcome_col = get_outcome_column()
+    pivot_trans = monthly.pivot(index='month_dt', columns='zip3', values=outcome_col)
     pivot_trans_log = np.log(pivot_trans)
 
     # Drop months where Chicago is missing
@@ -166,8 +146,8 @@ def main():
             ax.text(event_dt, ax.get_ylim()[1], event, rotation=90, va='top', fontsize=9, color='red')
 
     ax.set_xlabel('Month')
-    ax.set_ylabel('Log Transactions')
-    ax.set_title(f'Synthetic Control: Chicago vs {len(weight_df)} size-matched ZIP3s')
+    ax.set_ylabel(f'Log {outcome_col}')
+    ax.set_title(f'Synthetic Control: Chicago vs {len(weight_df)} ZIP3s {get_filter_title()}')
     ax.legend(loc='upper left')
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
     ax.tick_params(axis='x', rotation=45)
@@ -179,8 +159,9 @@ def main():
             verticalalignment='bottom', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
     plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / "chicago_synth_control.png", dpi=150, bbox_inches='tight')
-    log("Saved: chicago_synth_control.png")
+    outfile = f"chicago_synth_control{get_filter_suffix()}.png"
+    plt.savefig(OUTPUT_DIR / outfile, dpi=150, bbox_inches='tight')
+    log(f"Saved: {outfile}")
 
     # Print comparison by period
     print("\n" + "="*60)

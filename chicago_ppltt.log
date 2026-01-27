@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.1)  26 JAN 2026 11:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.1)  26 JAN 2026 12:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -244,7 +244,8 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 ) (/usr/local/texlive/2025basic/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-06-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count314
-) (./chicago_ppltt.aux)
+)
+No file chicago_ppltt.aux.
 \openout1 = `chicago_ppltt.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
@@ -265,7 +266,6 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 12.
 LaTeX Font Info:    ... okay on input line 12.
 LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 12.
 LaTeX Font Info:    ... okay on input line 12.
-
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -320,55 +320,95 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 Package hyperref Info: Link coloring OFF on input line 12.
- (./chicago_ppltt.out) (./chicago_ppltt.out)
 \@outlinefile=\write3
 \openout3 = `chicago_ppltt.out'.
 
-<chicago_chatgpt_median_price.png, id=29, 714.9912pt x 424.9476pt>
-File: chicago_chatgpt_median_price.png Graphic file (type png)
-<use chicago_chatgpt_median_price.png>
-Package pdftex.def Info: chicago_chatgpt_median_price.png  used on input line 25.
+
+
+LaTeX Warning: Reference `fig:price' on page 1 undefined on input line 21.
+
+<output/trans/all/all_merchants/chicago_chatgpt_median_price.png, id=4, 714.9912pt x 424.9476pt>
+File: output/trans/all/all_merchants/chicago_chatgpt_median_price.png Graphic file (type png)
+<use output/trans/all/all_merchants/chicago_chatgpt_median_price.png>
+Package pdftex.def Info: output/trans/all/all_merchants/chicago_chatgpt_median_price.png  used on input line 25.
 (pdftex.def)             Requested size: 422.77664pt x 251.27454pt.
+
+LaTeX Warning: Reference `fig:raw' on page 1 undefined on input line 36.
+
 
 
 [1
 
-{/usr/local/texlive/2025basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./chicago_chatgpt_median_price.png>]
-<chicago_raw_counts.png, id=44, 856.6404pt x 424.4658pt>
-File: chicago_raw_counts.png Graphic file (type png)
-<use chicago_raw_counts.png>
-Package pdftex.def Info: chicago_raw_counts.png  used on input line 40.
-(pdftex.def)             Requested size: 422.77664pt x 209.48619pt.
-<chicago_did.png, id=46, 859.5312pt x 424.4658pt>
-File: chicago_did.png Graphic file (type png)
-<use chicago_did.png>
-Package pdftex.def Info: chicago_did.png  used on input line 55.
+{/usr/local/texlive/2025basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./output/trans/all/all_merchants/chicago_chatgpt_median_price.png>]
+<output/trans/all/all_merchants/chicago_raw_counts.png, id=21, 860.013pt x 424.4658pt>
+File: output/trans/all/all_merchants/chicago_raw_counts.png Graphic file (type png)
+<use output/trans/all/all_merchants/chicago_raw_counts.png>
+Package pdftex.def Info: output/trans/all/all_merchants/chicago_raw_counts.png  used on input line 40.
+(pdftex.def)             Requested size: 422.77664pt x 208.66364pt.
+
+
+LaTeX Warning: Reference `fig:did' on page 2 undefined on input line 49.
+
+<output/trans/all/all_merchants/chicago_did.png, id=22, 859.5312pt x 424.4658pt>
+File: output/trans/all/all_merchants/chicago_did.png Graphic file (type png)
+<use output/trans/all/all_merchants/chicago_did.png>
+Package pdftex.def Info: output/trans/all/all_merchants/chicago_did.png  used on input line 58.
 (pdftex.def)             Requested size: 422.77664pt x 208.7867pt.
 
+LaTeX Warning: File `output/trans/15to25/all_merchants/chicago_did.png' not found on input line 65.
 
-[2 <./chicago_raw_counts.png>]
 
-[3 <./chicago_did.png>] (./chicago_ppltt.aux)
+/Users/jeffreyohl/Documents/GitHub/brainstorming/chicago_ppltt.tex:65: Package pdftex.def Error: File `output/trans/15to25/all_merchants/chicago_did.png' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.65 ...rans/15to25/all_merchants/chicago_did.png}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+
+[2 <./output/trans/all/all_merchants/chicago_raw_counts.png>]
+
+[3 <./output/trans/all/all_merchants/chicago_did.png>]
+
+[4] (./chicago_ppltt.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
  ***********
-Package rerunfilecheck Info: File `chicago_ppltt.out' has not changed.
-(rerunfilecheck)             Checksum: C9934C012AAF287FC3FB55FDCB91E834;716.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `chicago_ppltt.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `chicago_ppltt.out':
+(rerunfilecheck)             Before: <no file>
+(rerunfilecheck)             After:  C9934C012AAF287FC3FB55FDCB91E834;716.
  ) 
 Here is how much of TeX's memory you used:
- 9695 strings out of 469220
- 149306 string characters out of 5462268
- 563608 words of memory out of 5000000
- 38067 multiletter control sequences out of 15000+600000
- 634752 words of font info for 64 fonts, out of 8000000 for 9000
+ 9714 strings out of 469220
+ 151487 string characters out of 5462268
+ 563967 words of memory out of 5000000
+ 38088 multiletter control sequences out of 15000+600000
+ 634920 words of font info for 65 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 75i,6n,79p,434b,534s stack positions out of 10000i,1000n,20000p,200000b,200000s
- </Users/jeffreyohl/Library/texlive/2025basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb>
-Output written on chicago_ppltt.pdf (3 pages, 403450 bytes).
+ 75i,6n,79p,521b,453s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </Users/jeffreyohl/Library/texlive/2025basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on chicago_ppltt.pdf (4 pages, 413544 bytes).
 PDF statistics:
- 126 PDF objects out of 1000 (max. 8388607)
- 90 compressed objects within 1 object stream
- 16 named destinations out of 1000 (max. 500000)
- 64 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 115 PDF objects out of 1000 (max. 8388607)
+ 77 compressed objects within 1 object stream
+ 19 named destinations out of 1000 (max. 500000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

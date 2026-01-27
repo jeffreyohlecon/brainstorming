@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
 """
-TWFE DiD for Chicago PPLTT on ChatGPT subscriptions.
-Control group: ZIP3s with similar transaction volume to Chicago (606) in Jan-Jun 2023.
+TWFE DiD or Synthetic Control for Chicago PPLTT on ChatGPT subscriptions.
+Control group: ZIP3s with similar transaction volume to Chicago (606xx Zip codes) in Jan-Jun 2023.
 """
 
 import pandas as pd
 import numpy as np
 import statsmodels.formula.api as smf
+from scipy.optimize import minimize
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pathlib import Path
+from load_chatgpt_data import load_with_zip3, log, get_output_dir, get_filter_title, get_outcome_column
 
-DATA_DIR = Path("/Users/jeffreyohl/Dropbox/Gambling Papers and Data/CEdge data")
-OUTPUT_DIR = Path(__file__).parent
+# Toggle: False = DiD with inference, True = Synthetic control (just the picture)
+USE_SYNTH_CONTROL = False
 
 TREATED_ZIP = '606'
-START_DATE = '2023-02-01'  # ChatGPT Plus launch
+START_DATE = '2023-03-01'  # Drop Feb 2023 (outlier month)
 TREATMENT_DATE = '2023-10-01'
-END_DATE = '2025-01-01'  # Exclude 11% period
-SIZE_WINDOW = 0.5  # Controls must be within 50% of Chicago's size
+END_DATE = '2024-12-01'  # Exclude ChatGPT Pro period
+SIZE_WINDOW = 0.1  # Controls must be within 10% of Chicago's size
 
 EVENTS = {
     "ChatGPT Plus": "2023-02-01",
@@ -28,44 +30,150 @@ EVENTS = {
 }
 
 
-def log(msg):
-    from datetime import datetime
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}", flush=True)
+def run_synth_control(trans, donor_zips, chicago_size, size_label):
+    """Synthetic control: match pre-period outcomes, plot actual vs synthetic."""
+    log("Running synthetic control...")
+    outcome_col = get_outcome_column()
+
+    # Monthly aggregations
+    trans['month'] = trans['trans_date'].dt.to_period('M')
+    monthly = trans.groupby(['zip3', 'month']).agg(
+        n_transactions=('trans_amount', 'count'),
+        total_spend=('trans_amount', 'sum'),
+        n_users=('cardid', 'nunique')
+    ).reset_index()
+    monthly['month_dt'] = monthly['month'].dt.to_timestamp()
+
+    # Pivot to wide format (months x zip3s)
+    pivot = monthly.pivot(index='month_dt', columns='zip3', values=outcome_col)
+    pivot_log = np.log(pivot)
+    pivot_log = pivot_log.dropna(subset=[TREATED_ZIP])
+    pivot_log = pivot_log[pivot_log.index < END_DATE]
+
+    # Keep donors with complete pre-period data
+    pre_mask = pivot_log.index < TREATMENT_DATE
+    pre_data = pivot_log[pre_mask]
+    valid_donors = [z for z in donor_zips if z in pre_data.columns and pre_data[z].notna().all()]
+    log(f"Donors with complete pre-period: {len(valid_donors)}")
+
+    # Fit weights on pre-period
+    fit_data = pivot_log[pre_mask][[TREATED_ZIP] + valid_donors].dropna()
+    log(f"Pre-period months: {len(fit_data)}")
+
+    y_treated = fit_data[TREATED_ZIP].values
+    X_donors = fit_data[valid_donors].values
+
+    def objective(w):
+        synth = X_donors @ w
+        return np.mean((y_treated - synth) ** 2)
+
+    constraints = [{'type': 'eq', 'fun': lambda w: np.sum(w) - 1}]
+    bounds = [(0, 1) for _ in valid_donors]
+    w0 = np.ones(len(valid_donors)) / len(valid_donors)
+
+    result = minimize(objective, w0, method='SLSQP', bounds=bounds, constraints=constraints)
+    weights = result.x
+
+    print("\n" + "="*60)
+    print("SYNTHETIC CONTROL WEIGHTS")
+    print("="*60)
+    print(f"Pre-period RMSE (log {outcome_col}): {np.sqrt(result.fun):.4f}")
+
+    weight_df = pd.DataFrame({'zip3': valid_donors, 'weight': weights})
+    weight_df = weight_df[weight_df['weight'] > 0.01].sort_values('weight', ascending=False)
+    print("\nTop donors by weight:")
+    for _, row in weight_df.iterrows():
+        print(f"  {row['zip3']}: {row['weight']:.3f}")
+    print(f"\nDonors with weight > 1%: {len(weight_df)}")
+
+    # Compute synthetic for full period
+    top_donors = weight_df['zip3'].tolist()
+    top_weights = weight_df['weight'].values
+    full_data = pivot_log[[TREATED_ZIP] + top_donors].dropna()
+    full_data = full_data[full_data.index < END_DATE]
+    full_data['synthetic'] = full_data[top_donors].values @ top_weights
+
+    # Plot
+    log("Creating plot...")
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    ax.plot(full_data.index, full_data[TREATED_ZIP], marker='o', linewidth=2,
+            color='blue', label='Chicago (606xx Zip codes)')
+    ax.plot(full_data.index, full_data['synthetic'], marker='s', linewidth=2,
+            color='orange', linestyle='--', label='Synthetic Control')
+
+    # Shade treatment period
+    ax.axvspan(pd.to_datetime(TREATMENT_DATE), full_data.index.max(),
+               alpha=0.15, color='red')
+
+    for event, date in EVENTS.items():
+        event_dt = pd.to_datetime(date)
+        if full_data.index.min() <= event_dt <= full_data.index.max():
+            ax.axvline(event_dt, color='red', linestyle='--', alpha=0.7)
+            ax.text(event_dt, ax.get_ylim()[1], event, rotation=90, va='top', fontsize=9, color='red')
+
+    ax.set_xlabel('Month')
+    ax.set_ylabel(f'Log {outcome_col}')
+    ax.set_title(f'Synthetic Control: Chicago vs {len(weight_df)} donors {get_filter_title()}')
+    ax.legend(loc='upper left')
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+    ax.tick_params(axis='x', rotation=45)
+
+    # Notes
+    top3 = weight_df.head(3)
+    weight_note = "Top weights: " + ", ".join([f"{r['zip3']}={r['weight']:.2f}" for _, r in top3.iterrows()])
+    control_note = (f"Donors: {len(donor_zips)} ZIP3s within {SIZE_WINDOW*100:.0f}% of Chicago size\n"
+                    f"(Chicago had {chicago_size:,.0f} {size_label} in Mar-Jun 2023)\n"
+                    f"{weight_note}")
+    ax.text(0.02, 0.02, control_note, transform=ax.transAxes, fontsize=8,
+            verticalalignment='bottom', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
+
+    plt.tight_layout()
+    out_dir = get_output_dir()
+    plt.savefig(out_dir / "chicago_synth_control.png", dpi=150, bbox_inches='tight')
+    log(f"Saved: {out_dir / 'chicago_synth_control.png'}")
+
+    # Period comparisons
+    print("\n" + "="*60)
+    print("PERIOD COMPARISONS (log {})".format(outcome_col))
+    print("="*60)
+    for name, mask in [("Pre-tax (Feb-Sep 2023)", full_data.index < TREATMENT_DATE),
+                       ("Post-tax (Oct 2023+)", full_data.index >= TREATMENT_DATE)]:
+        subset = full_data[mask]
+        if len(subset) > 0:
+            diff = subset[TREATED_ZIP].mean() - subset['synthetic'].mean()
+            print(f"{name}: Chicago - Synth = {diff:.3f}")
 
 
 def main():
-    log("Loading transactions...")
-    dfs = []
-    for year in [2023, 2024, 2025]:
-        f = DATA_DIR / f"chatgpt_transactions_{year}.parquet"
-        if f.exists():
-            dfs.append(pd.read_parquet(f))
-    trans = pd.concat(dfs, ignore_index=True)
-
-    trans = trans[trans['service'].str.lower().isin(['chatgpt', 'openai'])]
-    log(f"ChatGPT/OpenAI: {len(trans):,}")
-
-    log("Loading demographics...")
-    demo = pd.read_csv(DATA_DIR / "chatgpt_demographics_2023_2024_2025.csv", low_memory=False)
-    trans = trans.merge(demo[['cardid', 'zip3']], on='cardid', how='left')
-    trans['zip3'] = trans['zip3'].astype(str)
-    trans['trans_date'] = pd.to_datetime(trans['trans_date'])
+    trans = load_with_zip3()
 
     # Select controls based on Feb-Jun 2023 size (post ChatGPT Plus launch)
-    log("Selecting size-matched controls...")
+    # Match on the outcome variable (transactions, spend, or unique users)
+    outcome_col = get_outcome_column()
+    log(f"Selecting size-matched controls (matching on {outcome_col})...")
     early = trans[(trans['trans_date'] >= START_DATE) & (trans['trans_date'] < '2023-07-01')]
-    counts = early.groupby('zip3').size().reset_index(name='n_trans')
 
-    chicago_size = counts[counts['zip3'] == TREATED_ZIP]['n_trans'].values[0]
+    if outcome_col == 'n_users':
+        counts = early.groupby('zip3')['cardid'].nunique().reset_index(name='size_metric')
+        size_label = 'unique users'
+    elif outcome_col == 'total_spend':
+        counts = early.groupby('zip3')['trans_amount'].sum().reset_index(name='size_metric')
+        size_label = 'total spend'
+    else:  # n_transactions
+        counts = early.groupby('zip3').size().reset_index(name='size_metric')
+        size_label = 'transactions'
+
+    chicago_size = counts[counts['zip3'] == TREATED_ZIP]['size_metric'].values[0]
     lower = chicago_size * (1 - SIZE_WINDOW)
     upper = chicago_size * (1 + SIZE_WINDOW)
 
-    similar = counts[(counts['n_trans'] >= lower) & (counts['n_trans'] <= upper)]
+    similar = counts[(counts['size_metric'] >= lower) & (counts['size_metric'] <= upper)]
     similar = similar[similar['zip3'] != TREATED_ZIP]  # Exclude Chicago
     similar = similar[similar['zip3'].str.match(r'^\d{3}$')]  # Valid ZIP3s only
 
     control_zips = similar['zip3'].tolist()
-    log(f"Chicago size (Jan-Jun 2023): {chicago_size}")
+    log(f"Chicago {size_label} (Mar-Jun 2023): {chicago_size}")
     log(f"Control ZIP3s (within {SIZE_WINDOW*100:.0f}%): {len(control_zips)}")
 
     # Filter to relevant ZIPs
@@ -76,16 +184,26 @@ def main():
     trans = trans[(trans['trans_date'] >= START_DATE) & (trans['trans_date'] < END_DATE)].copy()
     log(f"Sample: {trans['trans_date'].min()} to {trans['trans_date'].max()}")
 
+    # Branch based on method
+    if USE_SYNTH_CONTROL:
+        run_synth_control(trans, control_zips, chicago_size, size_label)
+        return
+
     # Week-zip3 panel
     log("Creating week-zip3 panel...")
     trans['week'] = trans['trans_date'].dt.to_period('W')
     trans['month'] = trans['trans_date'].dt.to_period('M')
 
-    df = trans.groupby(['zip3', 'week', 'month']).size().reset_index(name='n_trans')
+    df = trans.groupby(['zip3', 'week', 'month']).agg(
+        n_transactions=('trans_amount', 'count'),
+        total_spend=('trans_amount', 'sum'),
+        n_users=('cardid', 'nunique')
+    ).reset_index()
     df['week_dt'] = df['week'].dt.to_timestamp()
     df['month_str'] = df['month'].astype(str)
 
-    df['log_trans'] = np.log(df['n_trans'])
+    outcome_col = get_outcome_column()
+    df['log_y'] = np.log(df[outcome_col])
 
     df['treated'] = (df['zip3'] == TREATED_ZIP).astype(int)
     df['post'] = (df['week_dt'] >= TREATMENT_DATE).astype(int)
@@ -97,12 +215,12 @@ def main():
 
     # TWFE with clustered SEs
     print("\n" + "="*60)
-    print("Y = log(transactions)")
+    print(f"Y = log({outcome_col})")
     print("FE: zip3, month")
     print("Cluster: zip3")
     print("="*60)
 
-    model = smf.ols('log_trans ~ treated_post + C(zip3) + C(month_str)', data=df).fit(
+    model = smf.ols('log_y ~ treated_post + C(zip3) + C(month_str)', data=df).fit(
         cov_type='cluster', cov_kwds={'groups': df['zip3']}
     )
 
@@ -128,7 +246,7 @@ def main():
             df[var] = ((df['zip3'] == TREATED_ZIP) & (df['month_str'] == m)).astype(int)
 
     interact_vars = [month_to_var[m] for m in months_sorted if m != ref_month]
-    formula = 'log_trans ~ ' + ' + '.join(interact_vars) + ' + C(zip3) + C(month_str)'
+    formula = 'log_y ~ ' + ' + '.join(interact_vars) + ' + C(zip3) + C(month_str)'
 
     model_es = smf.ols(formula, data=df).fit(
         cov_type='cluster', cov_kwds={'groups': df['zip3']}
@@ -165,22 +283,44 @@ def main():
             ax.text(event_dt, ax.get_ylim()[1], event, rotation=90, va='top', fontsize=9, color='red')
 
     ax.set_xlabel('Month')
-    ax.set_ylabel('Chicago × Month (ref = Sep 2023)')
-    ax.set_title(f'Event Study: log(transactions), {len(control_zips)} size-matched controls')
+    # Clarify units based on outcome variable
+    if outcome_col == 'n_users':
+        y_label = 'Chicago × Month coefficient\n(Y = log unique cardids with $15-25 transaction)'
+        title_outcome = 'unique users'
+    elif outcome_col == 'total_spend':
+        y_label = 'Chicago × Month coefficient\n(Y = log total spend on $15-25 transactions)'
+        title_outcome = 'total spend'
+    else:
+        y_label = 'Chicago × Month coefficient\n(Y = log count of $15-25 transactions)'
+        title_outcome = 'transactions'
+    ax.set_ylabel(y_label, fontsize=10)
+    ax.set_title(f'Event Study: {title_outcome}, {len(control_zips)} controls {get_filter_title()}')
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
     ax.tick_params(axis='x', rotation=45)
 
     # Add control group description and treatment definition
-    control_note = (f"Controls: {len(control_zips)} ZIP3s with transaction counts\n"
-                    f"within {SIZE_WINDOW*100:.0f}% of Chicago (606) in Feb-Jun 2023\n"
-                    f"(Chicago had {chicago_size} transactions)\n"
+    # Clarify that "user" = cardid with $15-25 transaction
+    if outcome_col == 'n_users':
+        size_clarify = f"{size_label} (cardids with $15-25 trans)"
+    else:
+        size_clarify = size_label
+    control_note = (f"Controls: {len(control_zips)} ZIP3s matched on {size_clarify}\n"
+                    f"within {SIZE_WINDOW*100:.0f}% of Chicago in Mar-Jun 2023\n"
+                    f"(Chicago: {chicago_size:,.0f}; ref month = Sep 2023)\n"
                     f"Post = 1 for Chicago starting Oct 2023 (9% PPLTT)")
     ax.text(0.02, 0.02, control_note, transform=ax.transAxes, fontsize=8,
             verticalalignment='bottom', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))
 
+    # Add TWFE estimate
+    twfe_note = f"TWFE: β = {model.params['treated_post']:.3f} (SE = {model.bse['treated_post']:.3f})"
+    ax.text(0.98, 0.02, twfe_note, transform=ax.transAxes, fontsize=9, fontweight='bold',
+            verticalalignment='bottom', horizontalalignment='right',
+            bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.7))
+
     plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / "chicago_did.png", dpi=150, bbox_inches='tight')
-    log("Saved: chicago_did.png")
+    out_dir = get_output_dir()
+    plt.savefig(out_dir / "chicago_did.png", dpi=150, bbox_inches='tight')
+    log(f"Saved: {out_dir / 'chicago_did.png'}")
 
     print("\nPre-treatment:")
     for _, row in es_df[es_df['month_dt'] < TREATMENT_DATE].iterrows():
