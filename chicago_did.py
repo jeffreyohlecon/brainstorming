@@ -16,7 +16,7 @@ from pathlib import Path
 from load_chatgpt_data import load_with_zip3, log, get_output_dir, get_filter_title, get_outcome_column
 
 # Toggle: False = DiD with inference, True = Synthetic control (just the picture)
-USE_SYNTH_CONTROL = False
+USE_SYNTH_CONTROL = True
 
 TREATED_ZIP = '606'
 START_DATE = '2023-03-01'  # Drop Feb 2023 (outlier month)
@@ -79,19 +79,20 @@ def run_synth_control(trans, donor_zips, chicago_size, size_label):
     print("="*60)
     print(f"Pre-period RMSE (log {outcome_col}): {np.sqrt(result.fun):.4f}")
 
-    weight_df = pd.DataFrame({'zip3': valid_donors, 'weight': weights})
-    weight_df = weight_df[weight_df['weight'] > 0.01].sort_values('weight', ascending=False)
+    weight_df_all = pd.DataFrame({'zip3': valid_donors, 'weight': weights})
+    weight_df = weight_df_all[weight_df_all['weight'] > 0.01].sort_values('weight', ascending=False)
     print("\nTop donors by weight:")
     for _, row in weight_df.iterrows():
         print(f"  {row['zip3']}: {row['weight']:.3f}")
     print(f"\nDonors with weight > 1%: {len(weight_df)}")
+    print(f"Total weight in top donors: {weight_df['weight'].sum():.3f}")
 
-    # Compute synthetic for full period
-    top_donors = weight_df['zip3'].tolist()
-    top_weights = weight_df['weight'].values
-    full_data = pivot_log[[TREATED_ZIP] + top_donors].dropna()
+    # Compute synthetic for full period using ALL donors (weights sum to 1)
+    all_donors = weight_df_all['zip3'].tolist()
+    all_weights = weight_df_all['weight'].values
+    full_data = pivot_log[[TREATED_ZIP] + all_donors].dropna()
     full_data = full_data[full_data.index < END_DATE]
-    full_data['synthetic'] = full_data[top_donors].values @ top_weights
+    full_data['synthetic'] = full_data[all_donors].values @ all_weights
 
     # Plot
     log("Creating plot...")
@@ -122,8 +123,8 @@ def run_synth_control(trans, donor_zips, chicago_size, size_label):
     # Notes
     top3 = weight_df.head(3)
     weight_note = "Top weights: " + ", ".join([f"{r['zip3']}={r['weight']:.2f}" for _, r in top3.iterrows()])
-    control_note = (f"Donors: {len(donor_zips)} ZIP3s within {SIZE_WINDOW*100:.0f}% of Chicago size\n"
-                    f"(Chicago had {chicago_size:,.0f} {size_label} in Mar-Jun 2023)\n"
+    control_note = (f"Weights fitted on pre-treatment outcomes (Mar-Sep 2023)\n"
+                    f"{len(weight_df)} ZIP3s receive positive weight\n"
                     f"{weight_note}")
     ax.text(0.02, 0.02, control_note, transform=ax.transAxes, fontsize=8,
             verticalalignment='bottom', bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5))

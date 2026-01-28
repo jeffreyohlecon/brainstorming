@@ -1,6 +1,8 @@
 # Chicago PPLTT Analysis
 
-Difference-in-differences analysis of Chicago's 9% Personal Property Lease Transaction Tax (PPLTT) on ChatGPT subscriptions (Oct 2023).
+Analysis of Chicago's 9% Personal Property Lease Transaction Tax (PPLTT) on ChatGPT subscriptions (Oct 2023).
+
+**Preferred method: Synthetic control** (see `chicago_did.py` with `USE_SYNTH_CONTROL = True`). DiD event study available as alternative.
 
 ## Pipeline
 
@@ -43,9 +45,26 @@ Change these settings, then re-run `python run_all.py` to regenerate all figures
 ## Sample
 
 - **Treatment**: Chicago (ZIP3 606) starting Oct 2023
-- **Controls**: ~90 ZIP3s with transaction counts within 50% of Chicago in Feb-Jun 2023
-- **Period**: Feb 2023 (ChatGPT Plus launch) through Nov 2024 (excludes ChatGPT Pro)
-- **Filter**: $20-22 transactions (Plus subscription range with tax variation)
+- **Donor pool**: 19 ZIP3s with unique users within 10% of Chicago in Mar-Jun 2023
+- **Period**: Mar 2023 through Nov 2024 (excludes ChatGPT Pro)
+- **Filter**: $15-25 transactions (Plus subscription range with tax variation)
+- **Outcome**: log(unique cardids) per ZIP3-month
+
+### Matching Variables (Limitation)
+
+**Currently matching on pre-treatment outcomes only** (log unique users, Mar-Sep 2023). This is non-standard—Abadie et al. recommend matching on both pre-treatment outcomes AND covariates. Without covariate matching, the synthetic control may not generalize well or may be fitting noise in the pre-period.
+
+Ideal covariates for matching ZIP3 606:
+- College education rate
+- Median income
+- Total population
+- (other demographic characteristics)
+
+TODO: Obtain ZIP3-level demographics (ask Matt Noto?) and re-run with proper covariate matching.
+
+### Sensitivity to Donor Pool Size
+
+Current analysis uses 10% size window (19 donors). TODO: Test robustness to wider windows (e.g., 20%, 50%). Using all ZIP3s (no restriction) causes optimizer convergence issues with SLSQP. May require subfolder structure: `donor_10pct/`, `donor_20pct/`, etc.
 
 ## Panel Data (for Constant Individual Panel)
 
@@ -87,11 +106,20 @@ The transaction-count outcome (`OUTCOME_VAR = 'trans'`) shows a steady downward 
 
 This pattern could reflect differential attrition (Chicago cardholders leaving the sample faster than controls). Hard to attribute to secular changes in population/employment/income given how rapidly it occurs.
 
-The unique-users outcome (`OUTCOME_VAR = 'unique_users'`) counts distinct cardholders per zip3-month, isolating the extensive margin. This shows much cleaner parallel trends - Chicago tracks the synthetic control almost exactly post-treatment. The pre-treatment gap (Chicago above synthetic) closes to roughly zero post-tax.
+The unique-users outcome (`OUTCOME_VAR = 'unique_users'`) counts distinct cardholders per ZIP3-month, isolating the extensive margin. This shows excellent pre-treatment fit in synthetic control—Chicago tracks synthetic almost exactly through Sep 2023, then falls ~11% below post-tax.
+
+## Current Results (Synthetic Control)
+
+- **Pre-treatment RMSE**: 0.018
+- **Pre-tax gap**: +0.001 (essentially zero)
+- **Post-tax gap**: −0.112
+- **Treatment effect**: −11.2 log points (~11% reduction in unique subscribers)
+
+See `output/unique_users/15to25/all_merchants/synthetic_control_results.md` for full writeup.
 
 ## Archive
 
 `archive/` contains deprecated scripts:
-- `chicago_synth_control.py` - Synthetic control (replaced by DiD)
+- `chicago_synth_control.py` - Standalone SC (now integrated into `chicago_did.py`)
 - `ai_subscription_analysis.py` - Earlier exploratory analysis
 - `chatgpt_timeseries_analysis.py` - Earlier time series work
