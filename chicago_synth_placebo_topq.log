@@ -525,3 +525,452 @@ Placebo 25: zip3_id = 187
   pre=.0568578483463976, post=.0309823588262156, ratio=.5449090974646174, post_
 > gap=-.0015823765383435
 Placebo 26: zip3_id = 189
+  pre=.0790656200956278, post=.0733457616912225, ratio=.9276568197721428, post_
+> gap=-.0439852675689118
+Placebo 27: zip3_id = 196
+  pre=.0428068902192781, post=.0505138363414983, ratio=1.180039850658186, post_
+> gap=-.0361077609205885
+Placebo 28: zip3_id = 197
+  pre=.0472617630121173, post=.064693622503131, ratio=1.368836420396429, post_g
+> ap=.0519827110089994
+Placebo 29: zip3_id = 198
+  pre=.0394961825286711, post=.0575641295359474, ratio=1.457460591138407, post_
+> gap=-.0251251847948879
+Placebo 30: zip3_id = 199
+  pre=.0400102227798506, post=.1669179337455441, ratio=4.171882137822162, post_
+> gap=.1443349812179804
+Placebo 31: zip3_id = 205
+  Failed, skipping
+Placebo 32: zip3_id = 207
+  Failed, skipping
+Placebo 33: zip3_id = 208
+  Failed, skipping
+Placebo 34: zip3_id = 210
+  Failed, skipping
+Placebo 35: zip3_id = 216
+  Failed, skipping
+Placebo 36: zip3_id = 243
+  Failed, skipping
+Placebo 37: zip3_id = 246
+  Failed, skipping
+Placebo 38: zip3_id = 247
+  Failed, skipping
+Placebo 39: zip3_id = 248
+  Failed, skipping
+Progress: 40/184 completed
+Placebo 40: zip3_id = 251
+  Failed, skipping
+Placebo 41: zip3_id = 252
+  Failed, skipping
+Placebo 42: zip3_id = 253
+  Failed, skipping
+Placebo 43: zip3_id = 257
+  Failed, skipping
+Placebo 44: zip3_id = 258
+  Failed, skipping
+Placebo 45: zip3_id = 261
+  Failed, skipping
+Placebo 46: zip3_id = 263
+  Failed, skipping
+Placebo 47: zip3_id = 265
+  Failed, skipping
+Placebo 48: zip3_id = 266
+  Failed, skipping
+Placebo 49: zip3_id = 267
+  Failed, skipping
+Placebo 50: zip3_id = 268
+  Failed, skipping
+Placebo 51: zip3_id = 271
+  Failed, skipping
+Placebo 52: zip3_id = 272
+  Failed, skipping
+Placebo 53: zip3_id = 273
+  Failed, skipping
+Placebo 54: zip3_id = 274
+  Failed, skipping
+Placebo 55: zip3_id = 276
+  Failed, skipping
+Placebo 56: zip3_id = 277
+  Failed, skipping
+Placebo 57: zip3_id = 290
+  Failed, skipping
+Placebo 58: zip3_id = 291
+  Failed, skipping
+Placebo 59: zip3_id = 292
+  Failed, skipping
+Progress: 60/184 completed
+Placebo 60: zip3_id = 293
+  Failed, skipping
+Placebo 61: zip3_id = 295
+  Failed, skipping
+Placebo 62: zip3_id = 296
+  Failed, skipping
+Placebo 63: zip3_id = 297
+  Failed, skipping
+Placebo 64: zip3_id = 298
+  Failed, skipping
+Placebo 65: zip3_id = 299
+  Failed, skipping
+Placebo 66: zip3_id = 300
+  Failed, skipping
+Placebo 67: zip3_id = 301
+  Failed, skipping
+Placebo 68: zip3_id = 302
+  Failed, skipping
+Placebo 69: zip3_id = 303
+  Failed, skipping
+Placebo 70: zip3_id = 304
+  Failed, skipping
+Placebo 71: zip3_id = 305
+  Failed, skipping
+Placebo 72: zip3_id = 306
+  Failed, skipping
+Placebo 73: zip3_id = 307
+  Failed, skipping
+Placebo 74: zip3_id = 308
+  Failed, skipping
+Placebo 75: zip3_id = 310
+  Failed, skipping
+Placebo 76: zip3_id = 312
+  Failed, skipping
+Placebo 77: zip3_id = 313
+  Failed, skipping
+Placebo 78: zip3_id = 314
+  Failed, skipping
+Placebo 79: zip3_id = 317
+  Failed, skipping
+Progress: 80/184 completed
+Placebo 80: zip3_id = 333
+  Failed, skipping
+Placebo 81: zip3_id = 335
+  Failed, skipping
+Placebo 82: zip3_id = 480
+  Failed, skipping
+Placebo 83: zip3_id = 481
+  Failed, skipping
+Placebo 84: zip3_id = 497
+  Failed, skipping
+Placebo 85: zip3_id = 498
+  Failed, skipping
+Placebo 86: zip3_id = 499
+  Failed, skipping
+Placebo 87: zip3_id = 500
+  Failed, skipping
+Placebo 88: zip3_id = 504
+  Failed, skipping
+Placebo 89: zip3_id = 613
+  Failed, skipping
+Placebo 90: zip3_id = 616
+  Failed, skipping
+Placebo 91: zip3_id = 668
+  Failed, skipping
+Placebo 92: zip3_id = 669
+  Failed, skipping
+Placebo 93: zip3_id = 670
+  Failed, skipping
+Placebo 94: zip3_id = 677
+  Failed, skipping
+Placebo 95: zip3_id = 678
+  Failed, skipping
+Placebo 96: zip3_id = 679
+  Failed, skipping
+Placebo 97: zip3_id = 687
+  Failed, skipping
+Placebo 98: zip3_id = 688
+  Failed, skipping
+Placebo 99: zip3_id = 689
+  Failed, skipping
+Progress: 100/184 completed
+Placebo 100: zip3_id = 690
+  Failed, skipping
+Placebo 101: zip3_id = 695
+  Failed, skipping
+Placebo 102: zip3_id = 696
+  Failed, skipping
+Placebo 103: zip3_id = 697
+  Failed, skipping
+Placebo 104: zip3_id = 700
+  Failed, skipping
+Placebo 105: zip3_id = 701
+  Failed, skipping
+Placebo 106: zip3_id = 702
+  Failed, skipping
+Placebo 107: zip3_id = 714
+  Failed, skipping
+Placebo 108: zip3_id = 715
+  Failed, skipping
+Placebo 109: zip3_id = 716
+  Failed, skipping
+Placebo 110: zip3_id = 717
+  Failed, skipping
+Placebo 111: zip3_id = 718
+  Failed, skipping
+Placebo 112: zip3_id = 719
+  Failed, skipping
+Placebo 113: zip3_id = 720
+  Failed, skipping
+Placebo 114: zip3_id = 724
+  Failed, skipping
+Placebo 115: zip3_id = 747
+  Failed, skipping
+Placebo 116: zip3_id = 748
+  Failed, skipping
+Placebo 117: zip3_id = 750
+  Failed, skipping
+Placebo 118: zip3_id = 751
+  Failed, skipping
+Placebo 119: zip3_id = 755
+  Failed, skipping
+Progress: 120/184 completed
+Placebo 120: zip3_id = 757
+  Failed, skipping
+Placebo 121: zip3_id = 758
+  Failed, skipping
+Placebo 122: zip3_id = 759
+  Failed, skipping
+Placebo 123: zip3_id = 760
+  Failed, skipping
+Placebo 124: zip3_id = 763
+  Failed, skipping
+Placebo 125: zip3_id = 770
+  Failed, skipping
+Placebo 126: zip3_id = 782
+  Failed, skipping
+Placebo 127: zip3_id = 783
+  Failed, skipping
+Placebo 128: zip3_id = 785
+  Failed, skipping
+Placebo 129: zip3_id = 786
+  Failed, skipping
+Placebo 130: zip3_id = 789
+  Failed, skipping
+Placebo 131: zip3_id = 790
+  Failed, skipping
+Placebo 132: zip3_id = 792
+  Failed, skipping
+Placebo 133: zip3_id = 794
+  Failed, skipping
+Placebo 134: zip3_id = 795
+  Failed, skipping
+Placebo 135: zip3_id = 796
+  Failed, skipping
+Placebo 136: zip3_id = 797
+  Failed, skipping
+Placebo 137: zip3_id = 798
+  Failed, skipping
+Placebo 138: zip3_id = 799
+  Failed, skipping
+Placebo 139: zip3_id = 800
+  Failed, skipping
+Progress: 140/184 completed
+Placebo 140: zip3_id = 801
+  Failed, skipping
+Placebo 141: zip3_id = 803
+  Failed, skipping
+Placebo 142: zip3_id = 804
+  Failed, skipping
+Placebo 143: zip3_id = 806
+  Failed, skipping
+Placebo 144: zip3_id = 807
+  Failed, skipping
+Placebo 145: zip3_id = 808
+  Failed, skipping
+Placebo 146: zip3_id = 809
+  Failed, skipping
+Placebo 147: zip3_id = 810
+  Failed, skipping
+Placebo 148: zip3_id = 812
+  Failed, skipping
+Placebo 149: zip3_id = 813
+  Failed, skipping
+Placebo 150: zip3_id = 814
+  Failed, skipping
+Placebo 151: zip3_id = 815
+  Failed, skipping
+Placebo 152: zip3_id = 816
+  Failed, skipping
+Placebo 153: zip3_id = 817
+  Failed, skipping
+Placebo 154: zip3_id = 819
+  Failed, skipping
+Placebo 155: zip3_id = 820
+  Failed, skipping
+Placebo 156: zip3_id = 823
+  Failed, skipping
+Placebo 157: zip3_id = 824
+  Failed, skipping
+Placebo 158: zip3_id = 825
+  Failed, skipping
+Placebo 159: zip3_id = 826
+  Failed, skipping
+Progress: 160/184 completed
+Placebo 160: zip3_id = 827
+  Failed, skipping
+Placebo 161: zip3_id = 828
+  pre=.0882327469166412, post=.0400285726686032, ratio=.4536702535898673, post_
+> gap=.0256841308686749
+Placebo 162: zip3_id = 829
+  pre=.2416227332523992, post=.2371579495297952, ratio=.9815216736334983, post_
+> gap=.2366628050804138
+Placebo 163: zip3_id = 830
+  pre=.0358609476421837, post=.044395683500789, ratio=1.237995268383978, post_g
+> ap=-.0147778881447656
+Placebo 164: zip3_id = 831
+  pre=.0263925426621907, post=.0466579106190873, ratio=1.76784447092808, post_g
+> ap=.0030169810966722
+Placebo 165: zip3_id = 833
+  pre=.0780930698492277, post=.04836632512616, ratio=.619342090399822, post_gap
+> =.0272508218851207
+Placebo 166: zip3_id = 834
+  pre=.0170006568030208, post=.0781077077866426, ratio=4.594393539710999, post_
+> gap=-.0725483922953052
+Placebo 167: zip3_id = 835
+  pre=.0313285686523638, post=.0448106361428934, ratio=1.430344189679803, post_
+> gap=-.0259133490534233
+Placebo 168: zip3_id = 837
+  pre=.0313402053701521, post=.0387579785550198, ratio=1.236685532122654, post_
+> gap=-.0236375149023453
+Placebo 169: zip3_id = 838
+  pre=.0614782104153849, post=.0757095934619091, ratio=1.231486618598169, post_
+> gap=.04304150012987
+Placebo 170: zip3_id = 840
+  pre=.0432445933121851, post=.0822287009707112, ratio=1.9014793451079, post_ga
+> p=-.0627990321788405
+Placebo 171: zip3_id = 841
+  pre=.0660516664199455, post=.0565246547953063, ratio=.8557642503056918, post_
+> gap=-.0465684631573302
+Placebo 172: zip3_id = 842
+  pre=.0243023185336355, post=.0740102704129493, ratio=3.045399570025213, post_
+> gap=.0640502738034619
+Placebo 173: zip3_id = 843
+  pre=.0488870922840658, post=.0946384144786424, ratio=1.935856890991423, post_
+> gap=-.0813132974518729
+Placebo 174: zip3_id = 848
+  pre=.082849617230295, post=.0814251777323285, ratio=.9828069272304901, post_g
+> ap=-.0463410086064999
+Placebo 175: zip3_id = 850
+  pre=.0285222846994716, post=.1485900285150623, ratio=5.209611715214913, post_
+> gap=-.138231957597392
+Placebo 176: zip3_id = 851
+  pre=.0886871761445741, post=.0710897634887088, ratio=.8015788367511134, post_
+> gap=-.0174298358948103
+Placebo 177: zip3_id = 852
+  pre=.1133469183918788, post=.0860035723656828, ratio=.7587640986263009, post_
+> gap=.0630730178340205
+Placebo 178: zip3_id = 858
+  pre=.0310496864546291, post=.1511742148459419, ratio=4.868783943014787, post_
+> gap=-.139264389872551
+Placebo 179: zip3_id = 859
+  pre=.0194273814026927, post=.0292461069808441, ratio=1.505406538052035, post_
+> gap=-.0151677827317534
+Progress: 180/184 completed
+Placebo 180: zip3_id = 860
+  pre=.0409657799047791, post=.0689955669926393, ratio=1.684224422262012, post_
+> gap=.0448709892828317
+Placebo 181: zip3_id = 861
+  pre=.0766930543988597, post=.0901485054634657, ratio=1.175445497249697, post_
+> gap=.0720322416829211
+Placebo 182: zip3_id = 863
+  pre=.0550646095365892, post=.0988271940844847, ratio=1.794749747908704, post_
+> gap=-.0767747331410646
+Placebo 183: zip3_id = 864
+  pre=.033568187212487, post=.1896669475062025, ratio=5.650199288558795, post_g
+> ap=-.166252664955599
+
+. 
+. postclose `results'
+
+. 
+. * ===========================================================================
+. * Merge new results if incremental mode
+. * ===========================================================================
+. if `n_done' > 0 {
+.     * Append new results to existing
+.     use "$outdir/placebo_results_topq.dta", clear
+.     append using "$outdir/placebo_results_new.dta"
+.     save "$outdir/placebo_results_topq.dta", replace
+.     erase "$outdir/placebo_results_new.dta"
+.     di "Merged new results with existing"
+. }
+
+. 
+. * ===========================================================================
+. * Compute p-value
+. * ===========================================================================
+. use "$outdir/placebo_results_topq.dta", clear
+
+. 
+. * Filter to good pre-fit (< 5x Chicago)
+. local threshold = `chicago_pre_rmspe' * 5
+
+. gen good_fit = (pre_rmspe < `threshold')
+
+. 
+. di ""
+
+
+. di "========================================"
+========================================
+
+. di "RESULTS (TOP QUARTILE ONLY, WITH PRICE MATCHING)"
+RESULTS (TOP QUARTILE ONLY, WITH PRICE MATCHING)
+
+. di "========================================"
+========================================
+
+. count
+  54
+
+. di "Total units: " r(N)
+Total units: 54
+
+. count if good_fit
+  38
+
+. di "Good pre-fit (<5x): " r(N)
+Good pre-fit (<5x): 38
+
+. 
+. preserve
+
+. keep if good_fit == 1
+(16 observations deleted)
+
+. count if ratio >= `chicago_ratio'
+  1
+
+. local n_extreme = r(N)
+
+. count
+  38
+
+. local n_total = r(N)
+
+. local pvalue = `n_extreme' / `n_total'
+
+. 
+. di ""
+
+
+. di "Chicago ratio: `chicago_ratio'"
+Chicago ratio: 8.955192312782057
+
+. di "Units >= Chicago: `n_extreme' / `n_total'"
+Units >= Chicago: 1 / 38
+
+. di "P-VALUE: `pvalue'"
+P-VALUE: .0263157894736842
+
+. di "========================================"
+========================================
+
+. restore
+
+. 
+. save "$outdir/placebo_results_topq.dta", replace
+file
+    /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchan
+    > ts/placebo_results_topq.dta saved
+
+. 
+end of do-file

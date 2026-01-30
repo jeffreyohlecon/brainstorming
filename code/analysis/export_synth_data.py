@@ -71,13 +71,15 @@ def main():
     demo = pd.read_parquet(demo_path)
     log(f"Demographics: {len(demo)} ZIP3s")
 
-    # Keep covariates (dropped median_age, median_income, pct_stem - can't aggregate medians)
+    # Keep all covariates
     demo = demo[['zip3', 'pct_college', 'pct_hh_100k', 'pct_young',
-                 'pct_broadband', 'population']]
+                 'median_age', 'median_income', 'pct_stem', 'pct_broadband',
+                 'population']]
 
     # Merge
     panel = monthly.merge(demo, on='zip3', how='left')
-    panel = panel.dropna(subset=['pct_college', 'pct_hh_100k', 'pct_young', 'pct_broadband'])
+    panel = panel.dropna(subset=['pct_college', 'pct_hh_100k', 'pct_young',
+                                  'median_age', 'median_income', 'pct_stem', 'pct_broadband'])
     log(f"Panel after demo merge: {len(panel):,} obs")
 
     # Synth outcomes: log(users) and log(transactions)
@@ -104,7 +106,8 @@ def main():
         'users_pc', 'total_spend',
         'median_price', 'pre_mean_price',
         'treated', 'post',
-        'pct_college', 'pct_hh_100k', 'pct_young', 'pct_broadband',
+        'pct_college', 'pct_hh_100k', 'pct_young',
+        'median_age', 'median_income', 'pct_stem', 'pct_broadband',
         'population'
     ]]
 

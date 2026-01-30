@@ -41,7 +41,7 @@ Notes:
 > - pct_broadband: % with broadband internet
 > - pre_mean_early: mean $outcome_var Mar-Jun 2023 (months 3-6)
 > - pre_mean_late: mean $outcome_var Jul-Sep 2023 (months 7-9)
-> - pre_median_price: mean of monthly median price Mar-Sep 2023
+> - pre_mean_price: mean transaction price Mar-Sep 2023 (captures tax exposure)
 > 
 > Treatment: ZIP3 606 (Chicago), October 2023 (month_num = 10)
 > Pre-period: March-September 2023 (month_num = 3-9)
@@ -84,7 +84,7 @@ Notes:
 
 Contains data from data/synth_panel.dta
  Observations:        17,485                  
-    Variables:            22                  30 Jan 2026 15:09
+    Variables:            22                  30 Jan 2026 16:54
 -------------------------------------------------------------------------------
 Variable      Storage   Display    Value
     name         type    format    label      Variable label
@@ -100,7 +100,7 @@ log_trans       double  %10.0g
 users_pc        double  %10.0g                
 total_spend     double  %10.0g                
 median_price    double  %10.0g                
-pre_median_pr~e double  %10.0g                
+pre_mean_price  double  %10.0g                
 treated         long    %12.0g                
 post            long    %12.0g                
 pct_college     double  %10.0g                
@@ -131,7 +131,7 @@ Sorted by:
  total_spend |     17,485    1885.142    4154.952         15   65076.97
 -------------+---------------------------------------------------------
 median_price |     17,485    20.45202     .819534         15      24.86
-pre_median~e |     17,176    20.36435     .732681       15.5      23.33
+pre_mean_p~e |     17,176    20.24505    .6742462       15.5      23.33
      treated |     17,485     .001201     .034636          0          1
         post |     17,485    .6818988    .4657523          0          1
  pct_college |     17,485     .310016    .1150186   .0972528   .8548676
@@ -228,15 +228,15 @@ Panel variable: zip3_id (strongly balanced)
 . 
 . * List Chicago's covariates + pre-period means + pre-period price
 . list zip3 pct_college pct_hh_100k pct_young median_age median_income ///
->     pct_stem pct_broadband pre_mean_early pre_mean_late pre_median_price ///
+>     pct_stem pct_broadband pre_mean_early pre_mean_late pre_mean_price ///
 >     if zip3_id == `treated_unit' & month_num == 3
 
        +-----------------------------------------------------------------+
  9514. | zip3 | pct_col~e | pct_~100k | pct_young | media~ge | median~me |
        |  606 | .40964007 | .35064975 | .09827828 | 35.87647 | 73536.991 |
        |-----------------------------------------------------------------|
-       |  pct_stem  | pct_bro~d  |  pre_me~y  |  pre_m~te  |  pre_med~e  |
-       | .43149119  | .85220409  |  4.723479  |  5.092312  |  20.105714  |
+       |  pct_stem  | pct_bro~d  |  pre_me~y  |  pre_m~te  |  pre_me~ce  |
+       | .43149119  | .85220409  |  4.723479  |  5.092312  |  20.090063  |
        +-----------------------------------------------------------------+
 
 . 
@@ -248,7 +248,7 @@ Panel variable: zip3_id (strongly balanced)
 . synth $outcome_var ///
 >     pct_college pct_hh_100k pct_young ///
 >     median_age median_income pct_stem pct_broadband ///
->     pre_mean_early pre_mean_late pre_median_price, ///
+>     pre_mean_early pre_mean_late pre_mean_price, ///
 >     trunit(`treated_unit') trperiod(`treatment_time') ///
 >     fig keep("$outdir/synth_results", replace)
 -------------------------------------------------------------------------------
@@ -329,7 +329,7 @@ Results obtained for periods: 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21
 -------------------------------------------------------------------------------
                   Predictors: pct_college pct_hh_100k pct_young median_age
                               median_income pct_stem pct_broadband
-                              pre_mean_early pre_mean_late pre_median_price
+                              pre_mean_early pre_mean_late pre_mean_price
 -------------------------------------------------------------------------------
 Unless period is specified
 predictors are averaged over: 3 4 5 6 7 8 9
@@ -346,7 +346,7 @@ Third Step: Obtain Results
 Loss: Root Mean Squared Prediction Error
 
 ---------------------
-   RMSPE |  .0139883 
+   RMSPE |  .0337635 
 ---------------------
 -------------------------------------------------------------------------------
 Unit Weights:
@@ -419,7 +419,7 @@ Unit Weights:
        72 |           0
        73 |           0
        74 |           0
-       75 |        .005
+       75 |           0
        77 |           0
        78 |           0
        79 |           0
@@ -437,7 +437,7 @@ Unit Weights:
        91 |           0
        92 |           0
        93 |           0
-       94 |           0
+       94 |         .03
        95 |           0
        96 |           0
        97 |           0
@@ -561,7 +561,7 @@ Unit Weights:
       245 |           0
       246 |           0
       247 |           0
-      248 |           0
+      248 |        .118
       249 |           0
       250 |           0
       251 |           0
@@ -572,7 +572,7 @@ Unit Weights:
       256 |           0
       257 |           0
       258 |           0
-      259 |        .076
+      259 |           0
       261 |           0
       262 |           0
       263 |           0
@@ -586,7 +586,7 @@ Unit Weights:
       271 |           0
       272 |           0
       273 |           0
-      274 |        .262
+      274 |        .102
       275 |           0
       276 |           0
       277 |           0
@@ -791,7 +791,7 @@ Unit Weights:
       526 |           0
       527 |           0
       528 |           0
-      529 |        .079
+      529 |        .013
       530 |           0
       531 |           0
       532 |           0
@@ -861,7 +861,7 @@ Unit Weights:
       620 |           0
       622 |           0
       625 |           0
-      626 |        .058
+      626 |        .078
       627 |           0
       628 |           0
       629 |           0
@@ -918,7 +918,7 @@ Unit Weights:
       697 |           0
       698 |           0
       699 |           0
-      700 |           0
+      700 |        .049
       701 |           0
       702 |           0
       703 |           0
@@ -934,7 +934,7 @@ Unit Weights:
       715 |           0
       716 |           0
       717 |           0
-      718 |        .018
+      718 |        .025
       719 |           0
       720 |           0
       721 |           0
@@ -953,9 +953,9 @@ Unit Weights:
       736 |           0
       737 |           0
       738 |           0
-      739 |        .022
+      739 |           0
       740 |           0
-      741 |        .041
+      741 |         .12
       743 |           0
       744 |           0
       745 |           0
@@ -981,7 +981,7 @@ Unit Weights:
       765 |           0
       766 |           0
       767 |           0
-      768 |        .049
+      768 |        .051
       769 |           0
       770 |           0
       771 |           0
@@ -1000,7 +1000,7 @@ Unit Weights:
       786 |           0
       787 |           0
       788 |           0
-      789 |         .39
+      789 |        .415
       790 |           0
       791 |           0
       792 |           0
@@ -1094,16 +1094,16 @@ Predictor Balance:
 ------------------------------------------------------
                                |   Treated  Synthetic 
 -------------------------------+----------------------
-                   pct_college |  .4096401    .409394 
-                   pct_hh_100k |  .3506498   .3504943 
-                     pct_young |  .0982783   .0988824 
-                    median_age |  35.87647   35.92072 
-                 median_income |  73536.99   73602.86 
-                      pct_stem |  .4314912   .4316303 
-                 pct_broadband |  .8522041   .8525429 
-                pre_mean_early |  4.723479   4.724279 
-                 pre_mean_late |  5.092312   5.093182 
-              pre_median_price |  20.10571   20.12054 
+                   pct_college |  .4096401   .4099011 
+                   pct_hh_100k |  .3506498   .3509617 
+                     pct_young |  .0982783   .0984776 
+                    median_age |  35.87647   35.91995 
+                 median_income |  73536.99   73622.82 
+                      pct_stem |  .4314912   .4318314 
+                 pct_broadband |  .8522041   .8530318 
+                pre_mean_early |  4.723479   4.726808 
+                 pre_mean_late |  5.092312   5.096092 
+                pre_mean_price |  20.09006      20.11 
 ------------------------------------------------------
 -------------------------------------------------------------------------------
 
@@ -1151,27 +1151,27 @@ e(Y_treated)[21,1]
 
 e(Y_synthetic)[21,1]
            c1
- 3  4.4165816
- 4  4.7128153
- 5  4.8756501
- 6  4.8920706
- 7  5.0275782
- 8  5.0895026
- 9  5.1624661
-10  5.2894747
-11  5.3353325
-12  5.4908724
-13  5.6103879
-14  5.6804969
-15  5.7781405
-16  5.8467738
-17  5.8872361
-18  5.9340914
-19  5.9642955
-20   5.971539
-21  6.1296135
-22  6.2450744
-23   6.302585
+ 3  4.4132064
+ 4  4.7130924
+ 5  4.8688267
+ 6  4.9121051
+ 7   5.007166
+ 8  5.0686716
+ 9  5.2124379
+10  5.2945448
+11  5.3560934
+12  5.5113499
+13  5.6534889
+14  5.7046485
+15  5.7764316
+16  5.8642363
+17  5.8800902
+18  5.9354185
+19  5.9922741
+20   5.995082
+21  6.1129317
+22  6.2475601
+23   6.309061
 
 . 
 . * ===========================================================================
@@ -1221,7 +1221,7 @@ Number of observations (_N) was 0, now 733.
 . tempfile weights_temp
 
 . save `weights_temp'
-file /var/folders/g9/ggrmf_5j6tx4rv5qdhs0slq40000gn/T//St25745.000002 saved
+file /var/folders/g9/ggrmf_5j6tx4rv5qdhs0slq40000gn/T//St62704.000002 saved
     as .dta format
 
 . restore
@@ -2024,23 +2024,23 @@ Saved donor weights to /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/1
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-         gap |         14   -.1023477    .0749474  -.2240511   .0259597
+         gap |         14   -.1142975    .0688023  -.2265368   .0051987
 
 . local post_gap = r(mean)
 
 . display "Average post-treatment gap: `post_gap'"
-Average post-treatment gap: -.1023476971396511
+Average post-treatment gap: -.1142975218660597
 
 . summarize gap if _time < `treatment_time'
 
     Variable |        Obs        Mean    Std. dev.       Min        Max
 -------------+---------------------------------------------------------
-         gap |          7     -.00083    .0150819  -.0208025   .0284912
+         gap |          7   -.0035217    .0365502  -.0707744   .0493222
 
 . local pre_gap = r(mean)
 
 . display "Average pre-treatment gap: `pre_gap'"
-Average pre-treatment gap: -.0008299939134823
+Average pre-treatment gap: -.0035216619393655
 
 . restore
 

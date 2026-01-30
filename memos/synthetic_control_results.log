@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.1)  30 JAN 2026 16:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.1)  30 JAN 2026 16:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -262,23 +262,114 @@ LaTeX Warning: No \author given.
 [1
 
 {/usr/local/texlive/2025basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png, id=13, 903.375pt x 542.025pt>
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/chicago_vs_rest_raw.png, id=13, 715.9548pt x 425.9112pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/chicago_vs_rest_raw.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/chicago_vs_rest_raw.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/chicago_vs_rest_raw.png  used on input line 89.
+(pdftex.def)             Requested size: 422.77664pt x 251.50638pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png, id=15, 903.375pt x 542.025pt>
 File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png Graphic file (type png)
 <use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png  used on input line 116.
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png  used on input line 125.
 (pdftex.def)             Requested size: 422.77664pt x 253.66832pt.
 
-
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
+
+[2 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/chicago_vs_rest_raw.png>]
+
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png, id=15, 867.24pt x 505.89pt>
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png, id=21, 867.24pt x 505.89pt>
 File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png Graphic file (type png)
 <use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png  used on input line 162.
-(pdftex.def)      
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png  used on input line 171.
+(pdftex.def)             Requested size: 422.77664pt x 246.6223pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[3 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png>]
+Overfull \hbox (1.03471pt too wide) in paragraph at lines 197--204
+\OT1/cmr/m/n/10.95 2023 vs. Novem-ber 2024) re-veals Man-hat-tan shows a []+2.6%[] price increase---second only to Chicago's
+ []
+
+
+
+[4]
+
+LaTeX Warning: Reference `fig:077_price' on page 5 undefined on input line 238.
+
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png, id=30, 867.24pt x 505.89pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png  used on input line 255.
+(pdftex.def)             Requested size: 422.77664pt x 246.6223pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png, id=31, 722.7pt x 433.62pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png  used on input line 266.
+(pdftex.def)             Requested size: 422.77664pt x 253.66338pt.
+
+
+[5 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png>]
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[6 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png>]
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png, id=41, 852.786pt x 711.6186pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png  used on input line 319.
+(pdftex.def)             Requested size: 469.75502pt x 391.98865pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[7 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png>]
+
+[8 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png>] (./synthetic_control_results.aux)
+ ***********
+LaTeX2e <2025-06-01> patch level 1
+L3 programming layer <2025-09-02>
+ ***********
+
+
+LaTeX Warning: There were undefined references.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 3751 strings out of 469220
+ 63789 string characters out of 5462268
+ 476709 words of memory out of 5000000
+ 32185 multiletter control sequences out of 15000+600000
+ 635322 words of font info for 66 fonts, out of 8000000 for 9000
+ 319 hyphenation exceptions out of 8191
+ 59i,9n,67p,495b,238s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ </Users/jeffreyohl/Library/texlive/2025basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on synthetic_control_results.pdf (8 pages, 613117 bytes).
+PDF statistics:
+ 95 PDF objects out of 1000 (max. 8388607)
+ 52 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+

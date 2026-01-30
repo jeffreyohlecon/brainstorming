@@ -1,10 +1,11 @@
 # Fdb version 4
-["pdflatex"] 1769811783.59211 "/Users/jeffreyohl/Documents/GitHub/brainstorming/memos/synthetic_control_results.tex" "synthetic_control_results.pdf" "synthetic_control_results" 1769811784.92259 0
-  "/Users/jeffreyohl/Documents/GitHub/brainstorming/memos/synthetic_control_results.tex" 1769811783.20326 11624 a8a33add98c4600310e34f749d8e7685 ""
+["pdflatex"] 1769813794.02276 "/Users/jeffreyohl/Documents/GitHub/brainstorming/memos/synthetic_control_results.tex" "synthetic_control_results.pdf" "synthetic_control_results" 1769813794.80734 0
+  "/Users/jeffreyohl/Documents/GitHub/brainstorming/memos/synthetic_control_results.tex" 1769813792.91769 13566 2cb447ee528bf372812b9ddd4fad367f ""
   "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/trans_user_macros.tex" 1769807783.30064 521 d55d4dcd7621765eec4eef5f20541ce5 ""
-  "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png" 1769811597.55991 77544 f15884aa780861e751204025fae52283 ""
+  "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png" 1769811842.82082 77456 15b0f2b3f548c345d403bc39625dcac3 ""
   "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png" 1769807416.92979 127633 911f3a958ba9a60c4c577b281c6da7c9 ""
-  "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png" 1769807411.60653 45775 59fff421c2c9326e57ddb10cdd1326f0 ""
+  "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png" 1769812486.89473 45775 59fff421c2c9326e57ddb10cdd1326f0 ""
+  "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/chicago_vs_rest_raw.png" 1769807506.54925 85066 06bda14e311dd24cceddfdc6c55231f1 ""
   "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png" 1769807511.53138 50679 7422d7ddc54a459b1548f18ab0243642 ""
   "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png" 1769807513.17652 136554 5f6d7bdf7c144a7120f636dcebb08852 ""
   "/Users/jeffreyohl/Library/texlive/2025basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk" 1757081817.87649 12644 38ea92beb15fffa1ea30d3e5e420d1cc ""
@@ -74,9 +75,9 @@
   "/usr/local/texlive/2025basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1759325201 79187 04b17f8738f833a5a5f7867124477b59 ""
   "/usr/local/texlive/2025basic/texmf-var/web2c/pdftex/pdflatex.fmt" 1759325246 2959258 b627f00692cd1eae1178f0ddedb5ecb5 ""
   "/usr/local/texlive/2025basic/texmf.cnf" 1741448314 628 81d1ada0f601fb1ffa62f1323192d946 ""
-  "synth_macros.tex" 1769807513.86056 1214 2d26172f0805611dd9240033b6b6654d ""
-  "synthetic_control_results.aux" 1769811784.74775 3637 211f85ab06961a4429c2c74a82210975 "pdflatex"
-  "synthetic_control_results.tex" 1769811783.20326 11624 a8a33add98c4600310e34f749d8e7685 ""
+  "synth_macros.tex" 1769812530.72206 1228 d70ebc43bc9a0648ccd029cc71044ba9 ""
+  "synthetic_control_results.aux" 1769813794.76996 4076 95bace4889327dd047d1241647428877 "pdflatex"
+  "synthetic_control_results.tex" 1769813792.91769 13566 2cb447ee528bf372812b9ddd4fad367f ""
   (generated)
   "synthetic_control_results.aux"
   "synthetic_control_results.log"

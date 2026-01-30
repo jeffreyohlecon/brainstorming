@@ -1,7 +1,7 @@
 /*
 Placebo tests - TOP QUARTILE ONLY (by pre-treatment outcome)
 Filters out noisy small ZIP3s that produce meaningless placebo ratios.
-Includes pre_median_price matching.
+Includes pre_mean_price matching.
 
 Outcome: Set by $outcome_var from data/synth_config.do
 
@@ -223,11 +223,11 @@ foreach unit of local top_units {
         bysort zip3_id: egen pre_mean_late = max(pre_late_tmp)
         drop pre_late_tmp
 
-        * Run synth (with pre_median_price matching)
+        * Run synth (with pre_mean_price matching)
         capture synth $outcome_var ///
             pct_college pct_hh_100k pct_young ///
             median_age median_income pct_stem pct_broadband ///
-            pre_mean_early pre_mean_late pre_median_price, ///
+            pre_mean_early pre_mean_late pre_mean_price, ///
             trunit(`unit') trperiod(10) ///
             keep("$outdir/placebo_temp", replace)
     }

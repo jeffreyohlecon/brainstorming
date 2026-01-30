@@ -15,7 +15,7 @@ Covariates + two pre-period outcome means + pre-period price:
 - pct_broadband: % with broadband internet
 - pre_mean_early: mean $outcome_var Mar-Jun 2023 (months 3-6)
 - pre_mean_late: mean $outcome_var Jul-Sep 2023 (months 7-9)
-- pre_median_price: mean of monthly median price Mar-Sep 2023
+- pre_mean_price: mean transaction price Mar-Sep 2023 (captures tax exposure)
 
 Treatment: ZIP3 606 (Chicago), October 2023 (month_num = 10)
 Pre-period: March-September 2023 (month_num = 3-9)
@@ -71,7 +71,7 @@ drop pre_late_tmp
 
 * List Chicago's covariates + pre-period means + pre-period price
 list zip3 pct_college pct_hh_100k pct_young median_age median_income ///
-    pct_stem pct_broadband pre_mean_early pre_mean_late pre_median_price ///
+    pct_stem pct_broadband pre_mean_early pre_mean_late pre_mean_price ///
     if zip3_id == `treated_unit' & month_num == 3
 
 * Output directory comes from synth_config.do ($outdir)
@@ -81,7 +81,7 @@ list zip3 pct_college pct_hh_100k pct_young median_age median_income ///
 synth $outcome_var ///
     pct_college pct_hh_100k pct_young ///
     median_age median_income pct_stem pct_broadband ///
-    pre_mean_early pre_mean_late pre_median_price, ///
+    pre_mean_early pre_mean_late pre_mean_price, ///
     trunit(`treated_unit') trperiod(`treatment_time') ///
     fig keep("$outdir/synth_results", replace)
 

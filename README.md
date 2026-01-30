@@ -27,6 +27,39 @@ No local output folder in this repo.
 
 Where `{N}x` = threshold (2x, 5x, 20x). Generate with `python code/robustness/run_placebo_plots.py 2`.
 
+### Covariate Validation Outputs
+
+Created by:
+```bash
+PYTHONPATH=. python3 \
+  code/analysis/covariate_validation_ols.py
+```
+
+This script loads `data/synth_panel.dta`, aggregates to
+ZIP3-level pre-period totals (months 3–9), then regresses
+`log(pre_n_trans)` on demographics (and `pre_mean_price`).
+OLS uses HC1 standard errors. It also writes univariate
+correlations, scatterplots, and partial R2s (change in full
+model R2 from dropping each covariate).
+
+Outputs (exploratory):
+- `output/trans/15to25/all_merchants/exploratory/`
+  `covariate_validation_ols_tidy.csv`
+- `output/trans/15to25/all_merchants/exploratory/`
+  `covariate_validation_ols.csv`
+- `output/trans/15to25/all_merchants/exploratory/`
+  `covariate_validation_correlations.csv`
+- `output/trans/15to25/all_merchants/exploratory/`
+  `covariate_validation_scatterplots.png`
+- `output/trans/15to25/all_merchants/exploratory/`
+  `covariate_validation_partial_r2.csv`
+
+Optional LASSO (may crash; uses scikit-learn):
+```bash
+PYTHONPATH=. python3 \
+  code/analysis/covariate_validation_ols.py --lasso
+```
+
 ## Pipeline
 
 ### Quick Start
@@ -131,6 +164,7 @@ PYTHONPATH=. python3 code/robustness/run_placebo_plots.py 2
 | `detect_tax_changes.py` | Scans all ZIP3s for price changes between Mar 2023 and Nov 2024 |
 | `quick_zip_compare.py` | Compare any two ZIP3s: `python quick_zip_compare.py 606 077` |
 | `national_price_buckets.py` | National time series by price bucket |
+| `plot_chicago_vs_rest.py` | Chicago vs rest-of-U.S. raw trends → `chicago_vs_rest_raw.png` |
 | `chicago_raw_counts.py` | Raw time series: Chicago vs control mean |
 | `chicago_chatgpt_analysis.py` | Descriptive plots for Chicago |
 

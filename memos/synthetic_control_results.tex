@@ -84,6 +84,16 @@ However, from a user's first transaction to the end of the sample, only
 \transPerPostFirstMonthAll{} of potential months have a transaction
 (\transPerPostFirstMonthChi{} in Chicago)---not everyone renews each period.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{\exploratorypath/chicago_vs_rest_raw.png}
+\caption{Raw trends: Chicago vs.\ rest of U.S.\ log(unique users).
+Vertical line marks October 2023 (PPLTT). Pre-trends differ, motivating
+synthetic control over a simple DiD. \textcolor{red}{Something is wrong:
+Chicago cannot exceed the entire U.S.}}}
+\label{fig:pretrends_raw}
+\end{figure}
+
 \section{Results}
 
 Table~\ref{tab:rmspe} reports the main synthetic control results.
@@ -188,12 +198,12 @@ the placebo distribution.
 \textbf{Update (Jan 2026):} A systematic scan of median transaction prices
 across all ZIP3s (March 2023 vs.\ November 2024) reveals Manhattan shows a
 {\color{red}+2.6\%} price increase---second only to Chicago's {\color{red}+5.7\%}% HARDCODED
-(Figure~\ref{fig:taxdetect}). This may indicate OpenAI began collecting
-New York sales tax during the sample period. If so, Manhattan experienced
-a (smaller) tax treatment of its own, which would justify excluding it
-from the donor pool. We have not yet made this exclusion.
+(Figure~\ref{fig:taxdetect}). This price increase is consistent with
+OpenAI beginning to collect New York sales tax during the sample period,
+which would mean Manhattan is not a valid placebo. If so, Manhattan should
+be excluded from the donor pool (not yet implemented).
 
-Three implications follow:
+Three alternative explanations for big-city divergence:
 
 \begin{enumerate}
     \item \textbf{Big-city saturation}: Large cities may have adopted
@@ -259,6 +269,37 @@ Figure~\ref{fig:histogram_placebo} shows the distribution of gap ratios
 Chicago's gap ratio marked by vertical line.}
 \label{fig:histogram_placebo}
 \end{figure}
+
+\subsection{Methodological Limitations}
+
+Compared to Abadie, Diamond, and Hainmueller's (2010) California smoking
+study, our setting raises concerns about overfitting. Abadie et al.\ use
+38 control states and match on 6 covariates plus 3 pre-period outcome
+levels (cigarette sales in 1975, 1980, and 1988), drawing from a 19-year
+pre-treatment period (1970--1988). Their covariates---ln(GDP per capita),
+percent aged 15--24, retail cigarette price, and beer consumption---are
+chosen with clear theoretical justification for predicting cigarette demand.
+
+We match on 10 covariates (7 demographics plus 3 pre-period outcome
+summaries) using only 7 pre-treatment months. Our donor pool contains
+$\sim$740 ZIP3s, or 184 in the top-quartile restriction used for placebo
+inference. With fewer pre-periods and more potential donors relative to
+covariates, synthetic control has greater scope to find spurious matches.
+
+Two specific concerns:
+
+\begin{enumerate}
+    \item \textbf{Covariate selection}: Our demographic covariates
+        (college attainment, income, broadband access, STEM employment)
+        were chosen based on intuitions about ChatGPT adoption, not
+        prior empirical validation. Abadie et al.'s covariates have
+        established relationships to cigarette consumption.
+
+    \item \textbf{Pre-period length}: Collapsing 7 months into two
+        averages (early/late) provides less information about outcome
+        dynamics than matching on multiple years of pre-treatment data.
+        Idiosyncratic shocks in our short pre-period may not average out.
+\end{enumerate}
 
 \section{Technical Notes}
 
