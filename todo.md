@@ -1,5 +1,13 @@
 # TODO
 
+## Freeze plan (Jan 30, 2026)
+
+- **Run only required code**. Stop changing covariates/outcomes; focus on a 5-page writeup.
+- **Weaknesses to flag**: variable definitions (esp. pre-median price).
+- **Writeup note**: verify and state that Chicago had the largest price change over the period (compute before claiming).
+- **Action**: roll back files that run the main synth control to the last known-good state, then run placebo code only.
+- **Deliverable**: minimal spec + writeup; send to Noto soon.
+
 ## Current (Jan 30, 2026)
 
 - [x] **ZIP3 fix applied** — Using `chatgpt_card_info_2025_12_26.parquet` (from card table). Old demographics CSV was contaminated.
