@@ -151,82 +151,77 @@ python code/analysis/monitor_placebo.py  # Check progress
 - [x] Add pre_median_price matching
 - [ ] **Placebo tests with price matching** ← RUNNING (incremental, resumes on crash)
 - [x] Find other ZIP3s with tax changes (5% price jump) — only Chicago exceeds 5%; Manhattan +2.6%
-- [ ] Restrict SC to big-city donor pool
-- [ ] **Exclude ZIP3s with mid-sample price changes** — Manhattan (+2.6%) may have started collecting NY sales tax mid-sample; could exclude donors with price change > X%, or use continuous treatment intensity based on price change
 
 ---
 
-## CURRENT MIGRATION: unique_users → trans (Jan 2026)
+## CURRENT MIGRATION: Flexible Outcome Variable (Jan 2026)
 
-**Goal**: Change outcome from log(unique cardids) to log(transactions). Transactions better capture quantity (multiple purchases from same person count).
+**Full plan file**: `/Users/jeffreyohl/.claude/plans/abundant-bouncing-cherny.md`
 
-### Output Structure After Migration
+**Goal**: Change outcome in ONE place (`load_chatgpt_data.py`) and all downstream inherits. No hardcoded column names.
 
-All outputs go to: `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/`
-
+**Architecture**:
 ```
-trans/15to25/all_merchants/
-├── chicago_synth_stata.png      # Main SC plot
-├── chicago_spaghetti_donors.png # Donor comparison
-├── synth_results.dta            # Stata output
-├── synth_donor_weights.csv
-├── synthetic_placebo_robustness/
-│   ├── placebo_spaghetti_2x.png
-│   ├── placebo_histogram_2x.png
-│   └── ...
-└── exploratory/                 # NEW: exploratory outputs now here
-    ├── chicago_vs_rest_raw.png
-    ├── quick_*.png
-    ├── zip3_price_changes.csv
-    └── zip3_price_change_funnel.png
+load_chatgpt_data.py     ← Single source of truth (OUTCOME_VAR setting)
+        ↓
+run_analysis.py          ← Master pipeline
+        ↓
+export_synth_data.py     ← Writes panel + data/synth_config.do
+        ↓
+chicago_synth.do         ← Reads synth_config.do, uses $outcome_var
+        ↓
+plots, exports, etc.
 ```
 
-### Files to Change
+### What's Done
+- [x] `OUTCOME_VAR = OUTCOME_TRANSACTIONS` in load_chatgpt_data.py
+- [x] `get_exploratory_dir()` added
 
-1. **load_chatgpt_data.py**
-   - Change `OUTCOME_VAR = OUTCOME_USERS` → `OUTCOME_VAR = OUTCOME_TRANSACTIONS`
-   - Add `get_exploratory_dir()` function returning `{output_dir}/exploratory/`
+### What's Left
 
-2. **code/analysis/export_synth_data.py**
-   - Add `log_trans = np.log(panel['n_trans'])` column
-   - Keep both columns (log_users, log_trans) for flexibility
+**load_chatgpt_data.py**:
+- [ ] Add `get_log_outcome_column()` → returns `'log_users'` or `'log_trans'`
+- [ ] Add `get_outcome_label()` → returns `'Log Transactions'` or `'Log Unique Users'`
 
-3. **chicago_synth.do** and **chicago_synth_placebo_topq.do**
-   - Change `log_users` → `log_trans` throughout
-   - Update comments
+**export_synth_data.py**:
+- [ ] Add `log_trans = np.log(panel['n_trans'])` column
+- [ ] Write `data/synth_config.do` with Stata globals:
+  ```stata
+  global outcome_var "log_trans"
+  global outcome_label "Log Transactions"
+  ```
 
-4. **code/analysis/chicago_spaghetti_plot.py**
-   - Change `log_users` → `log_trans`
-   - Update y-axis label
+**chicago_synth.do** and **chicago_synth_placebo_topq.do**:
+- [ ] Add `include "data/synth_config.do"` at top
+- [ ] Replace all `log_users` with `$outcome_var`
 
-5. **code/analysis/export_synth_results_tex.py**
-   - Update COVARIATE_NAMES: 'Log users' → 'Log trans'
+**Python scripts using hardcoded paths or `log_users`**:
+- [ ] `code/analysis/chicago_spaghetti_plot.py` - use `get_log_outcome_column()`
+- [ ] `code/analysis/export_synth_results_tex.py` - dynamic labels
+- [ ] `code/exploratory/quick_zip_compare.py` - use `get_log_outcome_column()`, `get_exploratory_dir()`
+- [ ] `code/exploratory/detect_tax_changes.py` - use `get_exploratory_dir()`
+- [ ] `code/plot_chicago_vs_rest.py` - use `get_exploratory_dir()`
+- [ ] `code/robustness/helpers/plot_placebo_unit.py` - use `get_output_dir()`
+- [ ] `code/robustness/helpers/plot_placebo_robustness.py` - use `get_output_dir()`
+- [ ] `code/robustness/helpers/plot_placebo_spaghetti.py` - use `get_output_dir()`
 
-6. **Exploratory scripts** (use new `get_exploratory_dir()`):
-   - `code/exploratory/detect_tax_changes.py`
-   - `code/exploratory/quick_zip_compare.py`
-   - `code/plot_chicago_vs_rest.py`
+**run_analysis.py** (extend pipeline):
+- [ ] Add `code/exploratory/detect_tax_changes.py`
+- [ ] Add `code/plot_chicago_vs_rest.py`
+- [ ] Add `code/robustness/run_placebo_plots.py 2` (if placebo results exist)
 
-7. **memos/synthetic_control_results.tex**
-   - Change `\figpath` from `unique_users` to `trans`
-   - Update outcome description text throughout
-
-### Regeneration Steps
-
-After making changes:
-```bash
-python run_analysis.py        # Full pipeline
-# Then rerun exploratory scripts manually
-python code/exploratory/detect_tax_changes.py
-python code/plot_chicago_vs_rest.py
-```
+**memos/synthetic_control_results.tex**:
+- [ ] Change `\figpath` from `unique_users` to `trans`
+- [ ] Update outcome description text
 
 ### Verification
+- [ ] `trans/15to25/all_merchants/chicago_synth_stata.png` exists
+- [ ] `trans/15to25/all_merchants/exploratory/` has plots
+- [ ] Change `OUTCOME_VAR` back to `OUTCOME_USERS`, rerun → outputs go to `unique_users/`
+- [ ] `memos/synthetic_control_results.pdf` compiles
 
-Check that these exist:
-- `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png`
-- `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory/zip3_price_change_funnel.png`
-- `memos/synthetic_control_results.pdf` compiles without missing figures
+### Cleanup
+- [ ] Delete `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/` (old flat folder)
 
 ---
 

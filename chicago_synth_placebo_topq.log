@@ -927,3 +927,131 @@ Placebo 174: zip3_id = 840
   pre=.0308623251328667, post=.100700613057802, ratio=3.262897809036472, post_g
 > ap=-.0800342204914029
 Placebo 175: zip3_id = 845
+  pre=.1170683951608168, post=.0759988085472682, ratio=.649182970714416, post_g
+> ap=.0323014284617135
+Placebo 176: zip3_id = 847
+  pre=.0279060827941315, post=.1135474936478036, ratio=4.068915529473095, post_
+> gap=-.1063840854912996
+Placebo 177: zip3_id = 848
+  pre=.0561156742908728, post=.1134597876971166, ratio=2.021891194053972, post_
+> gap=-.086288773088849
+Placebo 178: zip3_id = 849
+  pre=.0835573854552439, post=.1253734231995416, ratio=1.500446938549744, post_
+> gap=-.0776828046904744
+Placebo 179: zip3_id = 855
+  pre=.0216834797622457, post=.1039868062339828, ratio=4.795669669913404, post_
+> gap=-.0949831035520349
+Progress: 180/185 completed
+Placebo 180: zip3_id = 856
+  pre=.0147813829127202, post=.0418691674154402, ratio=2.832560908723193, post_
+> gap=-.0327814620520387
+Placebo 181: zip3_id = 857
+  pre=.0515654789431277, post=.156170901206048, ratio=3.028594020784547, post_g
+> ap=-.1421343297032373
+Placebo 182: zip3_id = 858
+  pre=.0672184641672123, post=.116027827402562, ratio=1.72613029529999, post_ga
+> p=.102939247253484
+Placebo 183: zip3_id = 861
+  pre=.03204442698561, post=.1970505421185486, ratio=6.149292112698316, post_ga
+> p=-.1758846105741603
+Placebo 184: zip3_id = 869
+  pre=.0904244630286332, post=.0624044493813896, ratio=.69012795090228, post_ga
+> p=-.0294432704603033
+
+. 
+. postclose `results'
+
+. 
+. * ===========================================================================
+. * Merge new results if incremental mode
+. * ===========================================================================
+. if `n_done' > 0 {
+.     * Append new results to existing
+.     use "`outdir'/placebo_results_topq.dta", clear
+.     append using "`outdir'/placebo_results_new.dta"
+.     save "`outdir'/placebo_results_topq.dta", replace
+.     erase "`outdir'/placebo_results_new.dta"
+.     di "Merged new results with existing"
+. }
+
+. 
+. * ===========================================================================
+. * Compute p-value
+. * ===========================================================================
+. use "`outdir'/placebo_results_topq.dta", clear
+
+. 
+. * Filter to good pre-fit (< 5x Chicago)
+. local threshold = `chicago_pre_rmspe' * 5
+
+. gen good_fit = (pre_rmspe < `threshold')
+
+. 
+. di ""
+
+
+. di "========================================"
+========================================
+
+. di "RESULTS (TOP QUARTILE ONLY, WITH PRICE MATCHING)"
+RESULTS (TOP QUARTILE ONLY, WITH PRICE MATCHING)
+
+. di "========================================"
+========================================
+
+. count
+  185
+
+. di "Total units: " r(N)
+Total units: 185
+
+. count if good_fit
+  161
+
+. di "Good pre-fit (<5x): " r(N)
+Good pre-fit (<5x): 161
+
+. 
+. preserve
+
+. keep if good_fit == 1
+(24 observations deleted)
+
+. count if ratio >= `chicago_ratio'
+  4
+
+. local n_extreme = r(N)
+
+. count
+  161
+
+. local n_total = r(N)
+
+. local pvalue = `n_extreme' / `n_total'
+
+. 
+. di ""
+
+
+. di "Chicago ratio: `chicago_ratio'"
+Chicago ratio: 5.556646727950006
+
+. di "Units >= Chicago: `n_extreme' / `n_total'"
+Units >= Chicago: 4 / 161
+
+. di "P-VALUE: `pvalue'"
+P-VALUE: .0248447204968944
+
+. di "========================================"
+========================================
+
+. restore
+
+. 
+. save "`outdir'/placebo_results_topq.dta", replace
+file
+    /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_
+    > merchants/placebo_results_topq.dta saved
+
+. 
+end of do-file

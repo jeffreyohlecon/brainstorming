@@ -12,7 +12,8 @@ Output: data/synth_panel.dta
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from load_chatgpt_data import load_with_zip3, log
+from load_chatgpt_data import (load_with_zip3, log, get_log_outcome_column,
+                               get_outcome_label, get_output_dir)
 
 TREATED_ZIP = '606'
 START_DATE = '2023-03-01'
@@ -77,8 +78,9 @@ def main():
                                   'median_age', 'median_income', 'pct_stem', 'pct_broadband'])
     log(f"Panel after demo merge: {len(panel):,} obs")
 
-    # Synth outcome: log(users) - good pre-treatment fit
+    # Synth outcomes: log(users) and log(transactions)
     panel['log_users'] = np.log(panel['n_users'])
+    panel['log_trans'] = np.log(panel['n_trans'])
 
     # Spaghetti plot: users per capita (comparable across ZIP3s)
     panel['users_pc'] = panel['n_users'] / panel['population']

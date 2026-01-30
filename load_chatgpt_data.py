@@ -124,6 +124,24 @@ def get_outcome_column():
         return 'n_transactions'
 
 
+def get_log_outcome_column():
+    """Return the log outcome column name for synth/plots."""
+    if OUTCOME_VAR == OUTCOME_USERS:
+        return 'log_users'
+    else:
+        return 'log_trans'
+
+
+def get_outcome_label():
+    """Return human-readable label for the current outcome."""
+    if OUTCOME_VAR == OUTCOME_USERS:
+        return 'Log Unique Users'
+    elif OUTCOME_VAR == OUTCOME_TRANSACTIONS:
+        return 'Log Transactions'
+    else:
+        return 'Log Total Spend'
+
+
 def _get_top_merchants(trans_raw):
     """Get top N merchants by count from full sample (no amount filter)."""
     global _TOP_MERCHANTS_CACHE
