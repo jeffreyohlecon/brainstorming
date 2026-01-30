@@ -13,19 +13,15 @@ All output: `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/`
 
 No local output folder in this repo.
 
-### Placebo Robustness Plots
+## Pipeline
 
-`{outdir}/synthetic_placebo_robustness/` contains:
+### Quick Start
+```bash
+python run_analysis.py        # Full pipeline (export → Stata → plots → macros)
+python run_analysis.py --quick  # Skip Stata, use existing results
+```
 
-| File | Description |
-|------|-------------|
-| `placebo_spaghetti_{N}x.png` | Gap time series: Chicago (black) vs placebos (gray) |
-| `placebo_histogram_{N}x.png` | Distribution of gap ratios with Chicago marked |
-| `rmspe_vs_population_{N}x.png` | RMSPE ratio vs ZIP3 population |
-| `rmspe_vs_pre_users_{N}x.png` | RMSPE ratio vs pre-treatment users |
-| `gap_ratio_vs_pre_users_{N}x.png` | Gap ratio vs pre-treatment users |
-
-Where `{N}x` = threshold (2x, 5x, 20x). Generate with `python code/robustness/run_placebo_plots.py 2`.
+### Manual Steps
 
 ### Covariate Validation Outputs
 
@@ -60,16 +56,6 @@ PYTHONPATH=. python3 \
   code/analysis/covariate_validation_ols.py --lasso
 ```
 
-## Pipeline
-
-### Quick Start
-```bash
-python run_analysis.py        # Full pipeline (export → Stata → plots → macros)
-python run_analysis.py --quick  # Skip Stata, use existing results
-```
-
-### Manual Steps
-
 **Step 1: Export panel data**
 ```bash
 python code/analysis/export_synth_data.py
@@ -95,6 +81,20 @@ python code/analysis/export_synth_results_tex.py # → memos/synth_macros.tex
 /Applications/StataNow/StataMP.app/Contents/MacOS/stata-mp -b do chicago_synth_placebo_topq.do
 python code/analysis/monitor_placebo.py  # Check progress
 ```
+
+### Placebo Robustness Plots
+
+`{outdir}/synthetic_placebo_robustness/` contains:
+
+| File | Description |
+|------|-------------|
+| `placebo_spaghetti_{N}x.png` | Gap time series: Chicago (black) vs placebos (gray) |
+| `placebo_histogram_{N}x.png` | Distribution of gap ratios with Chicago marked |
+| `rmspe_vs_population_{N}x.png` | RMSPE ratio vs ZIP3 population |
+| `rmspe_vs_pre_users_{N}x.png` | RMSPE ratio vs pre-treatment users |
+| `gap_ratio_vs_pre_users_{N}x.png` | Gap ratio vs pre-treatment users |
+
+Where `{N}x` = threshold (2x, 5x, 20x). Generate with `python code/robustness/run_placebo_plots.py 2`.
 
 ## Key Files
 

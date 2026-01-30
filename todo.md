@@ -13,6 +13,9 @@
 - [ ] **Revert price definition** — Switch back to `pre_median_price` once sensitivity check is logged and decided.
 - [ ] **Make covariate list configurable** — Toggle the matching covariates (Table 1 list) via `config.py` or a single source of truth (shared by Stata + Python).
 - [ ] **Diagnose sensitivity** — Figure out why pre/post RMSPE ratio dropped from 8.96 to ~3.9 with `pre_mean_price`. Track the exact definition used previously (check GitHub/pastes) and write down the precise formulas.
+- [ ] **Rollback reference** — Prior "good" RMSPE ratio (8.96) appears in commit `cae2744` (Jan 30, 2026 16:01) in `memos/synth_macros.tex`. Use `git checkout cae2744 -- memos/synth_macros.tex` as a reference point for the old results.
+- [ ] **What broke + fix path** — Likely drivers: (1) price covariate changed from `pre_median_price` to `pre_mean_price`; (2) outcome/covariate balance row labels switched to `Log Transactions` (verify `OUTCOME_VAR`). Fix path: restore `pre_median_price` definition, confirm `OUTCOME_VAR` matches the old run, regenerate `synth_panel.dta`, rerun `chicago_synth.do`, then `export_synth_results_tex.py` and confirm `\rmspeRatio` ≈ 8.9x.
+- [ ] **Sanity check sensitivity** — Sit down with pen/paper to assess whether this level of sensitivity to the price covariate is a substantive concern vs. a side effect of other silent changes. Verify no other spec changes slipped in.
 - [ ] **Covariate validation OLS** — Ran `code/analysis/covariate_validation_ols.py`.
   - Output: `output/trans/15to25/all_merchants/exploratory/covariate_validation_ols*.csv`
   - Output: `output/trans/15to25/all_merchants/exploratory/covariate_validation_correlations.csv`
