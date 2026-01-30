@@ -1,0 +1,159 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{hyperref}
+
+% Auto-generated results (run code/export_synth_results_tex.py to update)
+\input{synth_macros.tex}
+
+% Figure path prefix
+\newcommand{\figpath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants}
+
+\title{Chicago PPLTT and ChatGPT Subscriptions}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Background}
+
+Chicago's Personal Property Lease Transaction Tax (PPLTT) applies to AI
+subscription services including ChatGPT Plus. The tax rate increased from
+9\% (October 2023) to 11\% (January 2025).
+
+\section{Price Pass-Through}
+
+Figure~\ref{fig:price} shows the median transaction amount for ChatGPT
+subscriptions in Chicago (ZIP3 606). The base ChatGPT Plus price is
+\$20/month. Full pass-through would imply prices of \$21.80 at 9\% and
+\$22.20 at 11\%.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{\figpath/chicago_chatgpt_median_price.png}
+    \caption{Median transaction amount for ChatGPT subscriptions in Chicago.
+    Horizontal lines indicate expected prices under full pass-through.
+    The IQR band shows the 25th--75th percentile range.}
+    \label{fig:price}
+\end{figure}
+
+Observed median prices are slightly below full pass-through (\$21.36 vs
+\$21.80 during the 9\% period), suggesting pass-through is high but not
+complete.
+
+\section{Synthetic Control}
+
+We estimate quantity effects using synthetic control methods, matching
+Chicago to a weighted combination of control ZIP3s based on demographics
+and pre-treatment outcomes.
+
+\subsection{Matching Variables}
+
+\begin{itemize}
+    \item \textbf{Demographics}: \% college, \% HH income $>$\$100k,
+        \% ages 18--34, median age, median income, \% STEM workers,
+        \% broadband
+    \item \textbf{Pre-treatment outcomes}: mean log(users) Mar--Jun 2023,
+        mean log(users) Jul--Sep 2023, mean median price Mar--Sep 2023
+\end{itemize}
+
+\subsection{Results}
+
+Table~\ref{tab:sc} reports the main synthetic control results.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Pre-treatment RMSPE (Mar--Sep 2023) & \preRMSPE \\
+Post-treatment RMSPE (Oct 2023--Nov 2024) & \postRMSPE \\
+RMSPE ratio (post/pre) & \rmspeRatio \\
+\midrule
+Average post-treatment gap & \postGapMean \\
+Implied effect & $-$\effectPct\% \\
+\bottomrule
+\end{tabular}
+\caption{Synthetic control results for Chicago (ZIP3 606).}
+\label{tab:sc}
+\end{table}
+
+Figure~\ref{fig:synth} shows the synthetic control plot.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{\figpath/chicago_synth_control.png}
+    \caption{Log unique users: Chicago vs.\ synthetic Chicago.
+    Vertical line marks October 2023 (tax implementation).}
+    \label{fig:synth}
+\end{figure}
+
+\subsection{Donor Weights}
+
+Table~\ref{tab:donors} shows the ZIP3s receiving positive weight in the
+synthetic control.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{rlr}
+\toprule
+\textbf{ZIP3} & \textbf{Area} & \textbf{Weight} \\
+\midrule
+\donorWeightsRows
+\bottomrule
+\end{tabular}
+\caption{Donor weights for synthetic Chicago.}
+\label{tab:donors}
+\end{table}
+
+Figure~\ref{fig:spaghetti} compares Chicago to the top donors.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{\figpath/chicago_spaghetti_donors.png}
+    \caption{Log unique users: Chicago vs.\ top donor ZIP3s.}
+    \label{fig:spaghetti}
+\end{figure}
+
+\section{Event Study}
+
+Figure~\ref{fig:did} presents event study estimates from a
+difference-in-differences specification:
+\[
+\log(\text{users}_{zt}) = \sum_{\tau \neq \text{Sep 2023}} \beta_\tau
+    \cdot \mathbf{1}[\text{Chicago}] \cdot \mathbf{1}[\text{month} = \tau]
+    + \alpha_z + \gamma_t + \varepsilon_{zt}
+\]
+Standard errors are clustered at the ZIP3 level.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{\figpath/chicago_did.png}
+    \caption{Event study coefficients for Chicago relative to size-matched
+    control ZIP3s. Reference period is September 2023. Error bars show
+    95\% confidence intervals.}
+    \label{fig:did}
+\end{figure}
+
+\section{Discussion}
+
+The evidence suggests:
+\begin{enumerate}
+    \item Price pass-through is high but slightly incomplete
+    \item Quantity declined relative to synthetic control by approximately
+        \effectPct\%
+    \item Implied elasticity is around $-1$ if we believe these estimates
+\end{enumerate}
+
+\paragraph{Potential confound: employer-paid subscriptions.} ChatGPT
+Enterprise launched in August 2023 (\$60/user/month, 150-seat minimum).
+ChatGPT Team launched in January 2024 (\$25--30/user/month). If Chicago
+employers adopted enterprise licenses in late 2023 or early 2024, affected
+users would disappear from personal credit card data. This would produce
+a Chicago-specific decline unrelated to the tax.
+
+\end{document}

@@ -1,0 +1,285 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{xcolor}
+
+% Auto-generated results (run code/export_synth_results_tex.py to update)
+\input{synth_macros.tex}
+
+% Figure path prefix
+\newcommand{\figpath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants}
+\newcommand{\exploratorypath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory}
+
+\title{Synthetic Control Analysis: Chicago PPLTT on ChatGPT Subscriptions}
+\date{January 2026}
+
+\begin{document}
+\maketitle
+
+\section{Method}
+
+We estimate the effect of Chicago's 9\% Personal Property Lease Transaction
+Tax (PPLTT) on ChatGPT subscriptions using synthetic control. The method
+constructs a weighted average of untreated ZIP3s to match Chicago on
+pre-treatment characteristics, then compares actual vs.\ synthetic outcomes
+post-treatment.
+
+\textbf{Matching variables:}
+
+\begin{itemize}
+    \item \textbf{Demographics (7 covariates):}
+    \begin{itemize}
+        \item \texttt{pct\_college}: \% with bachelor's degree or higher
+        \item \texttt{pct\_hh\_100k}: \% households earning \$100k+
+        \item \texttt{pct\_young}: \% aged 18--34
+        \item \texttt{median\_age}: median age
+        \item \texttt{median\_income}: median household income
+        \item \texttt{pct\_stem}: \% in STEM occupations
+        \item \texttt{pct\_broadband}: \% with broadband internet
+    \end{itemize}
+    \item \textbf{Pre-treatment outcomes (3 scalars):}
+    \begin{itemize}
+        \item \texttt{pre\_mean\_early}: mean log(unique users) Mar--Jun 2023
+        \item \texttt{pre\_mean\_late}: mean log(unique users) Jul--Sep 2023
+        \item \texttt{pre\_median\_price}: mean of monthly median transaction
+            price Mar--Sep 2023
+    \end{itemize}
+\end{itemize}
+
+Using pre-period means captures the outcome trend without overfitting to
+month-by-month noise. Pre-period price matching helps select donors with
+similar existing tax exposure.
+
+\textbf{Outcome:} $\log(\text{unique cardids with \$15--\$25 transaction})$
+per ZIP3-month.
+
+\textbf{Implementation:} Stata \texttt{synth} package (Abadie et al.).
+
+\section{Sample}
+
+\begin{itemize}
+    \item \textbf{Treated unit:} ZIP3 606 (Chicago)
+    \item \textbf{Treatment date:} October 2023
+    \item \textbf{Donor pool:} $\sim$740 ZIP3s with complete panel and
+        demographic data
+    \item \textbf{Panel:} Constant individual panel (cardlinkids active in
+        all 70-day windows)
+    \item \textbf{Transaction filter:} \$15--\$25 (ChatGPT Plus subscription
+        range)
+    \item \textbf{Sample period:} March 2023 -- November 2024
+\end{itemize}
+
+\section{Results}
+
+Table~\ref{tab:rmspe} reports the main synthetic control results.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Pre-treatment RMSPE (Mar--Sep 2023) & \preRMSPE \\
+Post-treatment RMSPE (Oct 2023--Nov 2024) & \postRMSPE \\
+RMSPE ratio (post/pre) & \rmspeRatio \\
+\midrule
+Average post-treatment gap & \postGapMean \\
+Implied effect & $-$\effectPct\% \\
+\bottomrule
+\end{tabular}
+\caption{Synthetic control results for Chicago (ZIP3 606).}
+\label{tab:rmspe}
+\end{table}
+
+Pre-treatment RMSPE (\preRMSPE) indicates good fit. The average
+post-treatment gap is \postGapMean{} ($\approx$\effectPct\% reduction);
+the higher post-treatment RMSPE (\postRMSPE) reflects the widening gap
+over time visible in Figure~\ref{fig:synth}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{\figpath/chicago_synth_stata.png}
+\caption{Chicago vs.\ synthetic control. Vertical line marks October 2023
+(tax implementation). Output from Stata \texttt{synth} command.}
+\label{fig:synth}
+\end{figure}
+
+\section{Covariate Balance}
+
+Table~\ref{tab:balance} shows the covariate balance between Chicago and
+synthetic Chicago.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Variable} & \textbf{Chicago} & \textbf{Synthetic} \\
+\midrule
+\covBalanceRows
+\bottomrule
+\end{tabular}
+\caption{Covariate balance for synthetic control.}
+\label{tab:balance}
+\end{table}
+
+\section{Donor Weights}
+
+Table~\ref{tab:donors} shows the ZIP3s receiving positive weight in the
+synthetic control.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rlr}
+\toprule
+\textbf{ZIP3} & \textbf{Area} & \textbf{Weight} \\
+\midrule
+\donorWeightsRows
+\bottomrule
+\end{tabular}
+\caption{Top donor ZIP3s for synthetic Chicago.}
+\label{tab:donors}
+\end{table}
+
+Figure~\ref{fig:spaghetti} compares Chicago to the top donors over time.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{\figpath/chicago_spaghetti_donors.png}
+\caption{Log unique users: Chicago vs.\ top donor ZIP3s.}
+\label{fig:spaghetti}
+\end{figure}
+
+\section{Interpretation}
+
+The Chicago PPLTT reduced the number of unique ChatGPT Plus subscribers
+by approximately \effectPct\% relative to the synthetic counterfactual.
+This is the extensive margin effect---fewer distinct cardholders making
+subscription-priced transactions.
+
+At a \$20 subscription price, a 9\% tax is \$1.80/month. A \effectPct\%
+reduction in subscribers implies a demand elasticity on the order of $-1$,
+though this is rough given the level shift rather than continuous price
+variation.
+
+\subsection{Identification Caveat: Manhattan Placebo}
+
+Running the synthetic control procedure on ZIP3 100 (Manhattan) as a
+placebo reveals a similar pattern: treated unit falls below its synthetic
+control post-treatment. New York State has taxed SaaS at approximately
+8.5\% continuously---there was no new tax in October 2023. Yet Manhattan
+exhibits a similar divergence pattern, placing it toward the high end of
+the placebo distribution.
+
+\textbf{Update (Jan 2026):} A systematic scan of median transaction prices
+across all ZIP3s (March 2023 vs.\ November 2024) reveals Manhattan shows a
+{\color{red}+2.6\%} price increase---second only to Chicago's {\color{red}+5.7\%}% HARDCODED
+(Figure~\ref{fig:taxdetect}). This may indicate OpenAI began collecting
+New York sales tax during the sample period. If so, Manhattan experienced
+a (smaller) tax treatment of its own, which would justify excluding it
+from the donor pool. We have not yet made this exclusion.
+
+Three implications follow:
+
+\begin{enumerate}
+    \item \textbf{Big-city saturation}: Large cities may have adopted
+        ChatGPT earlier and faster, saturating by late 2023.
+
+    \item \textbf{ChatGPT Enterprise}: OpenAI launched ChatGPT Enterprise
+        in August 2023. If big-city employers began paying for employee
+        subscriptions, those users would stop appearing in Consumer Edge
+        data (personal credit card transactions).
+
+    \item \textbf{Synthetic construction}: No weighted combination of
+        smaller areas can replicate big-city dynamics. Chicago tracks
+        Manhattan because both face the same urban-specific shocks.
+\end{enumerate}
+
+\subsection{Price Pass-Through Evidence}
+
+While quantity effects face identification challenges, price pass-through
+is cleaner. Chicago's median transaction price jumps from \$\chiPrePrice{}
+to \$\chiOctPrice{} exactly at October 2023, while Manhattan (existing tax)
+shows no discrete jump. This confirms the tax is being passed through
+to Chicago consumers.
+
+\subsection{Placebo Check: ZIP3 077 (New Jersey Shore)}
+
+ZIP3 077 (Long Branch / Red Bank, NJ) produces an RMSPE ratio of
+{\color{red}6.90},% HARDCODED - TODO: pull from placebo results
+exceeding Chicago's \rmspeRatio. However, the direction differs: 077's
+post-treatment gap is \emph{positive} (+0.115), meaning actual usage
+\emph{exceeded} the synthetic control. Chicago's gap is negative ($-0.118$),
+meaning actual usage \emph{fell below} the synthetic control.
+
+Figure~\ref{fig:077_price} shows flat median prices for 077 throughout the
+sample---no discrete tax-induced jump. The high RMSPE ratio reflects
+idiosyncratic positive shocks (perhaps local growth or demographic shifts),
+not a tax effect.
+
+This pattern does not threaten our causal interpretation: 077's divergence
+is in the opposite direction from Chicago's. A true confounder would need
+to produce \emph{negative} gaps in untreated areas around October 2023.
+
+\subsection{Placebo Inference}
+
+Figure~\ref{fig:spaghetti_placebo} shows the spaghetti plot of placebo gaps
+for all ZIP3s with pre-treatment RMSPE within 2$\times$ of Chicago's. Chicago
+(solid black) diverges visibly below the placebo distribution post-treatment.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{\figpath/synthetic_placebo_robustness/placebo_spaghetti_2x.png}
+\caption{Placebo gaps for ZIP3s with pre-RMSPE $\leq 2\times$ Chicago's.
+Chicago is the solid black line; placebo units in gray.}
+\label{fig:spaghetti_placebo}
+\end{figure}
+
+Figure~\ref{fig:histogram_placebo} shows the distribution of gap ratios
+(post-treatment gap / pre-treatment RMSPE) across placebo units.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{\figpath/synthetic_placebo_robustness/placebo_histogram_2x.png}
+\caption{Distribution of gap ratios among placebo units (2$\times$ threshold).
+Chicago's gap ratio marked by vertical line.}
+\label{fig:histogram_placebo}
+\end{figure}
+
+\section{Technical Notes}
+
+\begin{itemize}
+    \item \textbf{Constant panel:} Restricted to cardlinkids active in all
+        70-day windows throughout the sample period.
+    \item \textbf{Demographics source:} ACS 5-year 2022 estimates,
+        aggregated from ZCTA to ZIP3 using population weights.
+    \item \textbf{Pre-period price matching:} Matching on pre-period median
+        price helps select donors with similar existing tax exposure.
+\end{itemize}
+
+\appendix
+\section{Tax Detection Scan}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{\exploratorypath/zip3_price_change_funnel.png}
+\caption{Median transaction price change by ZIP3 (March 2023 to November
+2024). Chicago (606) is the only ZIP3 exceeding the 5\% threshold.
+Manhattan (100) shows {\color{red}+2.6\%}, suggesting possible tax collection starting
+mid-sample. Full results in \texttt{zip3\_price\_changes.csv}.}
+\label{fig:taxdetect}
+\end{figure}
+
+\section{Placebo Price Plots}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{\figpath/median_price_077.png}
+\caption{Median transaction price for ZIP3 077 (Long Branch / Red Bank, NJ).
+No discrete price jump is visible, despite this area having the highest
+RMSPE ratio ({\color{red}6.90}) among placebo units tested so far.}
+\label{fig:077_price}
+\end{figure}
+
+\end{document}

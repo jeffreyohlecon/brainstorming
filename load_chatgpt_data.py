@@ -27,7 +27,7 @@ TOP_N_MERCHANTS = 30
 OUTCOME_SPEND = 'spend'        # log(total_spend)
 OUTCOME_TRANSACTIONS = 'trans' # log(n_transactions)
 OUTCOME_USERS = 'unique_users' # log(n_unique_cardholders)
-OUTCOME_VAR = OUTCOME_USERS    # Current setting
+OUTCOME_VAR = OUTCOME_TRANSACTIONS  # Changed from OUTCOME_USERS Jan 2026
 
 # Panel filter (constant individuals)
 USE_PANEL = True  # If True, restrict to cardlinkids active in all 70-day windows
@@ -47,8 +47,9 @@ def get_output_dir():
     """Return output directory path based on current filter settings.
 
     Structure: output/{outcome}/{amount}/{merchants}/
+    All output goes to Dropbox for single source of truth.
     """
-    base = Path(__file__).parent / 'output'
+    base = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output')
 
     # Outcome
     outcome_dir = OUTCOME_VAR  # 'spend' or 'trans'
@@ -67,6 +68,13 @@ def get_output_dir():
     merchant_dir = 'top30' if USE_TOP_MERCHANTS else 'all_merchants'
 
     out_path = base / outcome_dir / amount_dir / merchant_dir
+    out_path.mkdir(parents=True, exist_ok=True)
+    return out_path
+
+
+def get_exploratory_dir():
+    """Return exploratory output directory (subfolder of main output dir)."""
+    out_path = get_output_dir() / 'exploratory'
     out_path.mkdir(parents=True, exist_ok=True)
     return out_path
 

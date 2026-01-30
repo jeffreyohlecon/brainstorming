@@ -1,0 +1,317 @@
+
+  ___  ____  ____  ____  ____ ®
+ /__    /   ____/   /   ____/      StataNow 19.5
+___/   /   /___/   /   /___/       MP—Parallel Edition
+
+ Statistics and Data Science       Copyright 1985-2025 StataCorp LLC
+                                   StataCorp
+                                   4905 Lakeway Drive
+                                   College Station, Texas 77845 USA
+                                   800-782-8272        https://www.stata.com
+                                   979-696-4600        service@stata.com
+
+Stata license: 22-user 8-core network, expiring 30 Jun 2026
+Serial number: 501909306443
+  Licensed to: Jeffrey Ohl
+               University of Chicago
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+      3. More than 2 billion observations are allowed; see help obs_advice.
+      4. Maximum number of variables is set to 5,000 but can be increased;
+          see help set_maxvar.
+
+. do chicago_synth_placebo.do 
+
+. /*
+> Placebo tests - VERBATIM copy of chicago_synth.do procedure for each unit.
+> */
+. 
+. clear all
+
+. set more off
+
+. 
+. * Create output file for results
+. tempname results
+
+. postfile `results' int(zip3_id) double(pre_rmspe post_rmspe ratio) ///
+>     using "output/placebo_results.dta", replace
+
+. 
+. * ===========================================================================
+. * First: Get Chicago's RMSPE from already-computed results
+. * ===========================================================================
+. use "output/synth_results.dta", clear
+
+. gen gap = _Y_treated - _Y_synthetic
+(717 missing values generated)
+
+. gen gap_sq = gap^2
+(717 missing values generated)
+
+. 
+. sum gap_sq if _time < 10
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      gap_sq |          7    .0012829    .0011291   1.01e-06   .0030806
+
+. local chicago_pre_rmspe = sqrt(r(mean))
+
+. 
+. sum gap_sq if _time >= 10
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      gap_sq |         14    .0161883    .0185188   .0000297   .0612527
+
+. local chicago_post_rmspe = sqrt(r(mean))
+
+. 
+. local chicago_ratio = `chicago_post_rmspe' / `chicago_pre_rmspe'
+
+. 
+. di "Chicago: pre_rmspe = `chicago_pre_rmspe', post_rmspe = `chicago_post_rmsp
+> e', ratio = `chicago_ratio'"
+Chicago: pre_rmspe = .0358177221862572, post_rmspe = .1272332532362985, ratio =
+>  3.55224300905199
+
+. post `results' (606) (`chicago_pre_rmspe') (`chicago_post_rmspe') (`chicago_r
+> atio')
+
+. 
+. * ===========================================================================
+. * Now run VERBATIM chicago_synth.do procedure for each placebo unit
+. * ===========================================================================
+. 
+. * Load ORIGINAL data (same as chicago_synth.do)
+. use "data/synth_panel.dta", clear
+
+. 
+. * Balance panel: keep only ZIP3s with all 21 months (SAME AS CHICAGO)
+. bysort zip3_id: gen n_months = _N
+
+. keep if n_months == 21
+(1,983 observations deleted)
+
+. drop n_months
+
+. 
+. * Get list of all balanced units
+. levelsof zip3_id, local(all_units)
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 20 21 22 23 24 25 27 28 29 30 31 3
+> 2 33 34 35 36 38 39 41 43 44 45 46 47 48 49 51 52 53 54 55 56 57 58 59 60 61 
+> 62 63 64 65 66 67 68 69 70 71 72 73 74 75 77 78 79 80 81 82 83 84 85 86 87 88
+>  89 90 91 92 93 94 95 96 97 99 100 101 102 103 104 106 107 108 109 111 112 11
+> 3 114 118 120 122 123 124 126 127 128 129 130 131 132 133 134 138 141 142 146
+>  147 148 149 150 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 
+> 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 1
+> 86 187 188 189 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 20
+> 5 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 224 228
+>  229 230 237 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 
+> 256 257 258 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 2
+> 76 277 278 279 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 29
+> 5 296 297 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314
+>  315 316 317 318 319 320 321 322 323 324 325 326 327 328 329 331 332 333 334 
+> 335 336 337 338 339 340 341 342 343 344 345 346 347 348 351 352 353 355 356 3
+> 57 358 360 362 363 364 365 369 370 373 379 384 385 386 388 389 390 394 395 39
+> 6 397 398 400 402 403 404 405 406 408 411 412 413 414 415 417 418 419 420 421
+>  423 424 426 428 429 430 431 432 433 434 435 436 437 438 439 440 441 442 444 
+> 445 446 447 449 450 451 452 453 454 455 456 457 458 459 462 465 466 467 468 4
+> 70 471 472 473 474 475 476 477 478 479 480 481 482 484 485 486 487 488 489 49
+> 0 491 492 493 494 495 496 497 498 500 501 502 503 504 505 506 507 508 509 510
+>  511 512 513 514 515 518 519 520 521 524 525 526 527 528 529 530 531 532 534 
+> 535 536 537 538 539 540 541 542 543 544 546 547 549 550 551 552 553 554 555 5
+> 57 558 559 560 562 563 564 565 566 567 568 571 573 574 575 576 578 579 580 58
+> 1 583 584 588 589 590 591 592 593 595 596 597 599 601 602 604 605 607 609 610
+>  611 613 614 616 617 619 622 623 624 625 626 627 628 629 630 631 633 634 636 
+> 638 639 640 641 644 645 646 647 648 649 650 657 658 663 665 666 667 668 669 6
+> 70 671 673 674 675 676 677 678 679 680 681 683 684 685 686 687 688 689 690 69
+> 1 692 693 694 695 696 697 698 699 700 701 702 703 705 706 708 709 710 711 712
+>  713 714 715 716 717 718 719 720 721 722 723 724 725 726 727 728 729 732 733 
+> 734 735 736 737 738 740 741 742 743 744 745 746 747 748 749 750 751 752 753 7
+> 54 755 756 757 758 759 760 761 762 763 764 765 766 767 768 769 770 771 772 77
+> 3 774 775 776 777 779 780 782 783 784 785 786 787 788 789 790 791 792 793 794
+>  795 796 797 798 799 800 801 802 803 804 805 806 807 808 809 810 811 812 813 
+> 814 815 816 817 818 819 820 821 822 823 824 825 826 827 828 829 830 831 832 8
+> 33 834 835 836 837 838 839 840 841 842 843 844 845 846 847 848 849 850 851 85
+> 2 853 855 856 857 858 859 860 861 862 863 864 865 866 867 868 869 870 871 872
+>  873
+
+. local n_units : word count `all_units'
+
+. di "Total balanced units: `n_units'"
+Total balanced units: 739
+
+. 
+. * Track progress
+. local i = 0
+
+. 
+. foreach unit of local all_units {
+  2.     * Skip Chicago (already have its results)
+.     if `unit' == 606 continue
+  3. 
+.     local ++i
+  4. 
+.     * Progress every 20 units
+.     if mod(`i', 20) == 0 {
+  5.         di "Progress: `i'/`n_units' completed"
+  6.     }
+  7. 
+.     di "Placebo `i': zip3_id = `unit'"
+  8. 
+.     quietly {
+  9.         * VERBATIM: Load data fresh
+.         use "data/synth_panel.dta", clear
+ 10. 
+.         * VERBATIM: Balance panel
+.         bysort zip3_id: gen n_months = _N
+ 11.         keep if n_months == 21
+ 12.         drop n_months
+ 13. 
+.         * VERBATIM: Set panel structure
+.         tsset zip3_id month_num
+ 14. 
+.         * VERBATIM: Create pre-period means (SAME EXACT CODE)
+.         bysort zip3_id: egen pre_early_tmp = mean(log_users) if inrange(month
+> _num, 3, 6)
+ 15.         bysort zip3_id: egen pre_mean_early = max(pre_early_tmp)
+ 16.         drop pre_early_tmp
+ 17. 
+.         bysort zip3_id: egen pre_late_tmp = mean(log_users) if inrange(month_
+> num, 7, 9)
+ 18.         bysort zip3_id: egen pre_mean_late = max(pre_late_tmp)
+ 19.         drop pre_late_tmp
+ 20. 
+.         * VERBATIM: Run synth (SAME EXACT COMMAND, just different trunit)
+.         capture synth log_users ///
+>             pct_college pct_hh_100k pct_young ///
+>             median_age median_income pct_stem pct_broadband ///
+>             pre_mean_early pre_mean_late, ///
+>             trunit(`unit') trperiod(10) ///
+>             keep("output/placebo_temp", replace)
+ 21.     }
+ 22. 
+.     if _rc != 0 {
+ 23.         di "  Failed, skipping"
+ 24.         continue
+ 25.     }
+ 26. 
+.     * Compute RMSPE from results
+.     quietly {
+ 27.         use "output/placebo_temp.dta", clear
+ 28.         gen gap = _Y_treated - _Y_synthetic
+ 29.         gen gap_sq = gap^2
+ 30. 
+.         sum gap_sq if _time < 10
+ 31.         local pre_rmspe = sqrt(r(mean))
+ 32. 
+.         sum gap_sq if _time >= 10
+ 33.         local post_rmspe = sqrt(r(mean))
+ 34. 
+.         local ratio = `post_rmspe' / `pre_rmspe'
+ 35.     }
+ 36. 
+.     di "  pre=`pre_rmspe', post=`post_rmspe', ratio=`ratio'"
+ 37.     post `results' (`unit') (`pre_rmspe') (`post_rmspe') (`ratio')
+ 38. }
+Placebo 1: zip3_id = 1
+  pre=.2597506883042121, post=.5440442703841507, ratio=2.094486347412418
+Placebo 2: zip3_id = 2
+  pre=.105420253467663, post=.2459348262250833, ratio=2.332899211824816
+Placebo 3: zip3_id = 3
+  pre=.0985031251601222, post=.223161992038265, ratio=2.265532100382633
+Placebo 4: zip3_id = 4
+  pre=.3456552840312999, post=.4381019249225525, ratio=1.26745328413056
+Placebo 5: zip3_id = 5
+  pre=.170894003538105, post=.4028730821748006, ratio=2.357444227614284
+Placebo 6: zip3_id = 6
+  pre=.1098298418620862, post=.2163109810100076, ratio=1.969510083440074
+Placebo 7: zip3_id = 7
+  pre=.1038616365565533, post=.1327361909609382, ratio=1.278009815382242
+Placebo 8: zip3_id = 8
+  pre=.3977423193267175, post=.5699653151938705, ratio=1.433001437108038
+Placebo 9: zip3_id = 9
+  pre=.3348042482271201, post=.1429795098956881, ratio=.4270540492027913
+Placebo 10: zip3_id = 10
+  pre=.2252430133053138, post=.2460478408539584, ratio=1.092366139323682
+Placebo 11: zip3_id = 11
+  pre=.2531053612205513, post=.2962122646381181, ratio=1.170312091413995
+Placebo 12: zip3_id = 12
+  pre=.327041553003761, post=.1852563924476808, ratio=.5664613280672329
+Placebo 13: zip3_id = 13
+  pre=.475029166932939, post=.2577966022931083, ratio=.5426963652728761
+Placebo 14: zip3_id = 14
+  pre=.2999467961699275, post=.2852943043300309, ratio=.9511496971229672
+Placebo 15: zip3_id = 15
+  pre=.1659018050233134, post=.1613194622890559, ratio=.9723791869918861
+Placebo 16: zip3_id = 16
+  pre=.1850383960419005, post=.3637982819772215, ratio=1.9660691497501
+Placebo 17: zip3_id = 17
+  pre=.2841201496569324, post=.1472246837366617, ratio=.518177552399686
+Placebo 18: zip3_id = 18
+  pre=.1800587903808964, post=.1576365575560729, ratio=.8754727121214604
+Placebo 19: zip3_id = 20
+  pre=.1569212193341663, post=.6099057994839721, ratio=3.886700613670148
+Progress: 20/739 completed
+Placebo 20: zip3_id = 21
+  pre=.4845082015467345, post=.5774453989545109, ratio=1.191817593822118
+Placebo 21: zip3_id = 22
+  pre=.1571603828149021, post=.3623178517855092, ratio=2.305401942245421
+Placebo 22: zip3_id = 23
+  pre=.4000586485867517, post=.5473625763545499, ratio=1.368205832540215
+Placebo 23: zip3_id = 24
+  pre=.0862727560145694, post=.3535793114601547, ratio=4.098388967664875
+Placebo 24: zip3_id = 25
+  pre=.2507474865316422, post=.2196647649918517, ratio=.8760397483152115
+Placebo 25: zip3_id = 27
+  pre=.6705912348555136, post=.534342035533253, ratio=.7968222782517922
+Placebo 26: zip3_id = 28
+  pre=.2520704801801965, post=.1783294429287563, ratio=.7074586552192653
+Placebo 27: zip3_id = 29
+  pre=.0091993673906164, post=1.072215016870679, ratio=116.5531249425223
+Placebo 28: zip3_id = 30
+  pre=.3605003458684456, post=.9307612580095643, ratio=2.581859542373974
+Placebo 29: zip3_id = 31
+  pre=.4740403683508009, post=.8201879549523446, ratio=1.730206981750943
+Placebo 30: zip3_id = 32
+  pre=.2583836914449162, post=.2800448778335912, ratio=1.083833411727895
+Placebo 31: zip3_id = 33
+  pre=.1574866537148381, post=.4883141085604095, ratio=3.100669784022476
+Placebo 32: zip3_id = 34
+  pre=.1642903527251371, post=.2222776619095225, ratio=1.352956264458206
+Placebo 33: zip3_id = 35
+  pre=.3490599886544489, post=.2061770620150134, ratio=.5906636931084012
+Placebo 34: zip3_id = 36
+  pre=.1815072535378453, post=.4266430643865611, ratio=2.350556553915371
+Placebo 35: zip3_id = 38
+  pre=.1786902169844397, post=.2875731389516295, ratio=1.609339021490311
+Placebo 36: zip3_id = 39
+  pre=.1557835698276501, post=.3044265938640111, ratio=1.954163678498387
+Placebo 37: zip3_id = 41
+  pre=.1744882330284749, post=.5364156623850855, ratio=3.074222559738726
+Placebo 38: zip3_id = 43
+  pre=.3805485109415844, post=.2322213285953321, ratio=.6102279260553432
+Placebo 39: zip3_id = 44
+  pre=.4071678622124703, post=.3998461257461715, ratio=.9820178920150674
+Progress: 40/739 completed
+Placebo 40: zip3_id = 45
+  pre=.2178613613830175, post=.5256391874001697, ratio=2.412723321213689
+Placebo 41: zip3_id = 46
+  pre=.1461097423233595, post=.6467513559044564, ratio=4.426476603272033
+Placebo 42: zip3_id = 47
+  pre=.1769176150215617, post=.358768199944703, ratio=2.02788286458066
+Placebo 43: zip3_id = 48
+  pre=.4573521814728564, post=.6187960762786386, ratio=1.352996883683529
+Placebo 44: zip3_id = 49
+  pre=.1279228150607362, post=.7428903772985761, ratio=5.80733293702035
+Placebo 45: zip3_id = 51
+  pre=.395291924382046, post=.2441729054397653, ratio=.6177027416420843
+Placebo 46: zip3_id = 52
+  pre=.3072440585433591, post=.3404705268544896, ratio=1.108143566611692
+Placebo 47: zip3_id = 53
+  pre=.2094208440970506, post=.1837942290946486, ratio=.8776310203843605
+Placebo 48: zip3_id = 54

@@ -1,0 +1,164 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{natbib}
+\usepackage{hyperref}
+
+\title{Synthetic Control Estimation of Chicago's Lease Tax
+on ChatGPT Subscriptions}
+\author{}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Setting}
+
+Chicago imposes a 9\% Personal Property Lease Transaction Tax
+(PPLTT) on digital subscriptions, including ChatGPT Plus.
+The tax took effect in October 2023.
+We estimate the effect on ChatGPT subscription adoption
+using synthetic control methods.
+
+\section{Identification Strategy}
+
+We construct a synthetic Chicago from a weighted average
+of untreated ZIP3 regions.
+Following \citet{abadie2010synthetic},
+we match on pre-treatment covariates only---not
+pre-treatment outcomes.
+This approach finds regions that \emph{look like} Chicago
+demographically, rather than regions that happened to have
+similar ChatGPT trends in the pre-period.
+
+Matching on pre-treatment outcomes risks overfitting
+to idiosyncratic noise.
+If Chicago had an unusually good or bad month for
+unrelated reasons, outcome-matching would select
+donors that share that noise.
+Covariate-only matching avoids this problem.
+
+\section{Covariate Selection}
+
+We match on three ZIP3-level characteristics from the
+2022 American Community Survey (5-year estimates).
+Each has a clear economic rationale for predicting
+ChatGPT adoption.
+
+\subsection{Education (Percent College-Educated)}
+
+ChatGPT's value proposition centers on knowledge work:
+writing, coding, analysis, research.
+College-educated workers hold jobs where these tasks
+are common.
+Education also correlates with technological literacy
+and willingness to adopt new tools.
+
+\subsection{Income (Percent of Households Earning \$100k+)}
+
+ChatGPT Plus costs \$20 per month---discretionary spending.
+The share of high-income households captures
+ability to pay for productivity subscriptions.
+We use this measure rather than median income because
+medians cannot be aggregated from ZCTA to ZIP3;
+proportions can.
+
+\subsection{Age (Percent Aged 18--34)}
+
+Younger adults adopt new technologies faster.
+This pattern appears across smartphones, social media,
+and software tools.
+AI assistants follow the same adoption curve.
+
+\subsection{Covariates Not Included}
+
+\paragraph{Broadband access.}
+The 2022 ACS shows 85\%+ broadband penetration
+in most ZIP3s, including Chicago (85.2\%).
+Limited variation remains.
+Broadband likely proxies for urban/rural status
+rather than directly driving ChatGPT adoption.
+ChatGPT also works on mobile networks.
+
+\paragraph{STEM occupation share.}
+STEM workers are heavy ChatGPT users
+(code generation, technical writing).
+However, STEM share correlates strongly with
+education and income.
+Conditional on those two covariates,
+STEM adds little independent information.
+
+\section{Data}
+
+\paragraph{Outcome.}
+Log unique cardholders with a \$15--25 ChatGPT transaction
+per ZIP3-month.
+This range captures Plus subscriptions (\$20 base price)
+with variation from taxes and currency conversion.
+
+\paragraph{Treatment.}
+ZIP3 606 (Chicago), October 2023 onward.
+
+\paragraph{Donor pool.}
+All other ZIP3s with complete data
+March 2023 through November 2024.
+We require a balanced panel: ZIP3s must have
+at least one ChatGPT transaction in all 21 months.
+This drops approximately 11\% of ZIP3s,
+primarily small or rural areas with zero transactions
+in some months.
+Since Chicago is a large urban area,
+these dropped ZIP3s would be poor donors regardless;
+excluding them does not bias the synthetic control.
+
+\paragraph{Demographics.}
+American Community Survey 2022 5-year estimates,
+aggregated from ZCTA to ZIP3 using population weights.
+
+\section{Estimation}
+
+We estimate synthetic control weights using
+Stata's \texttt{synth} command
+\citep{abadie2010synthetic, abadie2015comparative}.
+The command finds non-negative weights summing to one
+that minimize the distance between treated and
+synthetic control covariates.
+See the Stata documentation for implementation details.
+
+\subsection{Covariate-Only Matching: A Negative Result}
+
+We first attempted pure covariate matching
+(demographics only, no pre-treatment outcomes).
+The synthetic control achieves good demographic balance:
+41\% college vs.\ 43\% synthetic,
+35\% high-income vs.\ 38\% synthetic,
+9.8\% young vs.\ 10.4\% synthetic.
+
+Despite this balance, the synthetic has far fewer
+ChatGPT users than Chicago---a 2.2 log-point gap
+(approximately 9$\times$ fewer users) even before treatment.
+Demographics alone do not explain cross-sectional
+variation in ChatGPT adoption.
+Unobserved factors (tech company presence,
+university density, early-adopter networks)
+drive usage levels.
+
+\subsection{Hybrid Matching}
+
+Given this negative result, we add the pre-treatment
+average of log users to the matching variables.
+This single scalar captures the level of ChatGPT adoption
+without fitting to month-by-month noise in the pre-period.
+The hybrid approach matches on:
+\begin{itemize}
+\item Percent college-educated
+\item Percent high-income households
+\item Percent aged 18--34
+\item Mean log users, March--September 2023
+\end{itemize}
+
+\bibliographystyle{aer}
+\bibliography{references}
+
+\end{document}
