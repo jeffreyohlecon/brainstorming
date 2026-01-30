@@ -5,12 +5,17 @@
 \usepackage{amsmath}
 \usepackage{xcolor}
 
+% See zip3_fixes.md for ZIP3 assignment methodology and known limitations.
+
 % Auto-generated results (run code/export_synth_results_tex.py to update)
 \input{synth_macros.tex}
+\input{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/trans_user_macros.tex}
 
 % Figure path prefix
-\newcommand{\figpath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants}
-\newcommand{\exploratorypath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory}
+% NOTE: Update these when changing OUTCOME_VAR in load_chatgpt_data.py
+% unique_users → trans (or vice versa)
+\newcommand{\figpath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants}
+\newcommand{\exploratorypath}{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/exploratory}
 
 \title{Synthetic Control Analysis: Chicago PPLTT on ChatGPT Subscriptions}
 \date{January 2026}
@@ -41,8 +46,8 @@ post-treatment.
     \end{itemize}
     \item \textbf{Pre-treatment outcomes (3 scalars):}
     \begin{itemize}
-        \item \texttt{pre\_mean\_early}: mean log(unique users) Mar--Jun 2023
-        \item \texttt{pre\_mean\_late}: mean log(unique users) Jul--Sep 2023
+        \item \texttt{pre\_mean\_early}: mean log(outcome) Mar--Jun 2023
+        \item \texttt{pre\_mean\_late}: mean log(outcome) Jul--Sep 2023
         \item \texttt{pre\_median\_price}: mean of monthly median transaction
             price Mar--Sep 2023
     \end{itemize}
@@ -52,7 +57,7 @@ Using pre-period means captures the outcome trend without overfitting to
 month-by-month noise. Pre-period price matching helps select donors with
 similar existing tax exposure.
 
-\textbf{Outcome:} $\log(\text{unique cardids with \$15--\$25 transaction})$
+\textbf{Outcome:} $\log(\text{transactions in \$15--\$25 range})$
 per ZIP3-month.
 
 \textbf{Implementation:} Stata \texttt{synth} package (Abadie et al.).
@@ -70,6 +75,14 @@ per ZIP3-month.
         range)
     \item \textbf{Sample period:} March 2023 -- November 2024
 \end{itemize}
+
+The \$15--\$25 filter captures ChatGPT Plus subscriptions (\$20 + tax).
+Conditional on having at least one transaction in this range, the average
+user has \transPerActiveMonthAll{} transactions per active month
+(\transPerActiveMonthChi{} in Chicago), consistent with monthly billing.
+However, from a user's first transaction to the end of the sample, only
+\transPerPostFirstMonthAll{} of potential months have a transaction
+(\transPerPostFirstMonthChi{} in Chicago)---not everyone renews each period.
 
 \section{Results}
 
@@ -263,7 +276,7 @@ Chicago's gap ratio marked by vertical line.}
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth]{\exploratorypath/zip3_price_change_funnel.png}
+\includegraphics[width=\textwidth]{/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png}
 \caption{Median transaction price change by ZIP3 (March 2023 to November
 2024). Chicago (606) is the only ZIP3 exceeding the 5\% threshold.
 Manhattan (100) shows {\color{red}+2.6\%}, suggesting possible tax collection starting
@@ -271,15 +284,31 @@ mid-sample. Full results in \texttt{zip3\_price\_changes.csv}.}
 \label{fig:taxdetect}
 \end{figure}
 
-\section{Placebo Price Plots}
+% Placebo Price Plots section removed - median_price_077.png not regenerated
 
-\begin{figure}[h]
+\section{ZIP3 Reference}
+
+For reference, key ZIP3 codes mentioned in this analysis:
+
+\begin{table}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{\figpath/median_price_077.png}
-\caption{Median transaction price for ZIP3 077 (Long Branch / Red Bank, NJ).
-No discrete price jump is visible, despite this area having the highest
-RMSPE ratio ({\color{red}6.90}) among placebo units tested so far.}
-\label{fig:077_price}
-\end{figure}
+\begin{tabular}{rl}
+\toprule
+\textbf{ZIP3} & \textbf{Area} \\
+\midrule
+606 & Chicago, IL (treated) \\
+100 & Manhattan, NY \\
+077 & Long Branch / Red Bank, NJ \\
+069 & Garden City / Long Island, NY \\
+094 & San Mateo / Silicon Valley, CA \\
+174 & Binghamton, NY \\
+900 & Los Angeles, CA \\
+277 & Raleigh, NC \\
+303 & Atlanta, GA \\
+\bottomrule
+\end{tabular}
+\caption{ZIP3 codes referenced in this document.}
+\label{tab:zip3ref}
+\end{table}
 
 \end{document}

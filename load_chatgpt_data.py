@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 """
 Shared data loading for ChatGPT analysis.
 All scripts import from here to ensure consistent filtering.
@@ -170,7 +170,7 @@ def _get_panel_cardids():
     log(f"  Panel cardlinkids: {len(panel_linkids):,}")
 
     # Map to cardids via card_info
-    card_info = pd.read_parquet(DATA_DIR / "chatgpt_card_info.parquet")
+    card_info = pd.read_parquet(DATA_DIR / "chatgpt_card_info_2025_12_26.parquet")
     # Exclude USA1 debit (same filter as panelize.py)
     usa1_debit = (card_info['source_group'] == 1) & (card_info['cardtype'] == 'DEBIT')
     card_info = card_info[~usa1_debit]
@@ -248,11 +248,17 @@ def load_transactions(services=('chatgpt', 'openai'), years=(2023, 2024, 2025),
 
 
 def load_demographics():
-    """Load demographics for zip3 matching."""
-    log("Loading demographics...")
-    demo = pd.read_csv(DATA_DIR / "chatgpt_demographics_2023_2024_2025.csv", low_memory=False)
-    log(f"Demographics: {len(demo):,} cardids")
-    return demo
+    """Load ZIP3 from card_info (correct source).
+
+    Uses chatgpt_card_info.parquet which has ZIP directly from card table.
+    The old demographics CSV used cardid_address_map which had garbage data.
+    """
+    log("Loading card info with ZIP3...")
+    card_info = pd.read_parquet(DATA_DIR / "chatgpt_card_info_2025_12_26.parquet")
+    # zip is already 3-digit from card table
+    card_info['zip3'] = card_info['zip'].astype(str)
+    log(f"Card info: {len(card_info):,} cardids")
+    return card_info[['cardid', 'zip3']]
 
 
 def load_with_zip3(services=('chatgpt', 'openai'), years=(2023, 2024, 2025),

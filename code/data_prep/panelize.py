@@ -53,7 +53,7 @@ def generate_windows(start, end, window_days):
 def load_card_info():
     """Load card info and filter out USA1 debit cards."""
     log("Loading card info...")
-    card_info = pd.read_parquet(DATA_DIR / "chatgpt_card_info.parquet")
+    card_info = pd.read_parquet(DATA_DIR / "chatgpt_card_info_2025_12_26.parquet")
     log(f"  Total cards: {len(card_info):,}")
 
     # Exclude USA1 debit cards (source_group == 1 AND cardtype == 'DEBIT')

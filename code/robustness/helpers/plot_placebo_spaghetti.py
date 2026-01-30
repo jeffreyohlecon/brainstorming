@@ -13,8 +13,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-DATA_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/'
-                'unique_users/15to25/all_merchants')
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+from load_chatgpt_data import get_output_dir
+
+DATA_DIR = get_output_dir()
 OUT_DIR = DATA_DIR / 'synthetic_placebo_robustness'
 
 THRESHOLD_MULT = int(sys.argv[1]) if len(sys.argv) > 1 else 5

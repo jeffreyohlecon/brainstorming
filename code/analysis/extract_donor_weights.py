@@ -66,7 +66,7 @@ def extract_weights_from_log(log_path):
 
 
 def main():
-    repo_dir = Path(__file__).parent.parent
+    repo_dir = Path(__file__).parent.parent.parent  # code/analysis -> code -> repo root
     log_path = repo_dir / 'chicago_synth.log'
 
     if not log_path.exists():

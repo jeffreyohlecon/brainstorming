@@ -12,7 +12,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from load_chatgpt_data import (
-    load_with_zip3, get_output_dir, log
+    load_with_zip3, get_exploratory_dir, log
 )
 
 def main():
@@ -86,8 +86,7 @@ def main():
     plt.tight_layout()
 
     # Save to exploratory
-    out_dir = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory')
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = get_exploratory_dir()
     out_path = out_dir / 'chicago_vs_rest_raw.png'
     plt.savefig(out_path, dpi=150, bbox_inches='tight')
     log(f"Saved: {out_path}")

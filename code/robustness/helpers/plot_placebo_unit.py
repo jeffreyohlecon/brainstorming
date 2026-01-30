@@ -10,6 +10,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+from load_chatgpt_data import get_output_dir, get_outcome_label
+
 if len(sys.argv) != 2:
     print("Usage: python plot_placebo_unit.py ZIP3")
     print("Example: python plot_placebo_unit.py 077")
@@ -19,11 +22,11 @@ zip3_input = sys.argv[1]
 # Handle '077' -> 77
 zip3_id = int(zip3_input.lstrip('0')) if zip3_input.lstrip('0') else 0
 
-# Paths
-DATA_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/'
-                'unique_users/15to25/all_merchants')
+# Paths (from load_chatgpt_data settings)
+DATA_DIR = get_output_dir()
 OUT_DIR = DATA_DIR / 'synthetic_placebo_robustness' / 'placebo_sc_plots'
 OUT_DIR.mkdir(parents=True, exist_ok=True)
+outcome_label = get_outcome_label()
 
 # Load placebo series
 df = pd.read_stata(DATA_DIR / 'placebo_series_long.dta')
@@ -51,7 +54,7 @@ ax.plot(unit['month_num'], unit['y_synthetic'],
 ax.axvline(x=10, color='black', linestyle=':', alpha=0.7)
 
 ax.set_xlabel('month_num')
-ax.set_ylabel('log_users')
+ax.set_ylabel(outcome_label)
 ax.legend(loc='upper left', frameon=False)
 ax.grid(True, alpha=0.3, linestyle='--')
 

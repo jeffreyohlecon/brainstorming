@@ -1,24 +1,58 @@
 /*
-Placebo tests - TOP QUARTILE ONLY (>=42 users/month pre-treatment)
+Placebo tests - TOP QUARTILE ONLY (by pre-treatment outcome)
 Filters out noisy small ZIP3s that produce meaningless placebo ratios.
 Includes pre_median_price matching.
 
-INCREMENTAL: Checks for existing results and resumes from where it left off.
+Outcome: Set by $outcome_var from data/synth_config.do
+
+INCREMENTAL: Resumes if main synth unchanged. Restarts if main synth is newer.
 */
 
 clear all
 set more off
 
-* Output directory (matches load_chatgpt_data.py settings)
-local outdir "/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants"
+* Load config (outcome_var, outcome_label, outdir from Python)
+include "data/synth_config.do"
+
+* ===========================================================================
+* Smart resume: restart if main synth changed
+* ===========================================================================
+local main_synth "$outdir/chicago_synth_stata.png"
+local placebo_file "$outdir/placebo_results_topq.dta"
+
+capture confirm file "`main_synth'"
+local main_exists = (_rc == 0)
+
+capture confirm file "`placebo_file'"
+local placebo_exists = (_rc == 0)
+
+if `main_exists' & `placebo_exists' {
+    quietly shell stat -f "%m" "`main_synth'" > /tmp/main_mtime.txt
+    quietly shell stat -f "%m" "`placebo_file'" > /tmp/placebo_mtime.txt
+
+    file open main_f using "/tmp/main_mtime.txt", read
+    file read main_f main_mtime
+    file close main_f
+
+    file open placebo_f using "/tmp/placebo_mtime.txt", read
+    file read placebo_f placebo_mtime
+    file close placebo_f
+
+    if `main_mtime' > `placebo_mtime' {
+        di "WARNING: Main synth is newer than placebo results"
+        di "RESTARTING FRESH (deleting old placebo results)"
+        erase "`placebo_file'"
+        capture erase "$outdir/placebo_series_long.dta"
+    }
+}
 
 * ===========================================================================
 * Check for existing results (incremental mode)
 * ===========================================================================
 local done_units ""
-capture confirm file "`outdir'/placebo_results_topq.dta"
+capture confirm file "$outdir/placebo_results_topq.dta"
 if _rc == 0 {
-    use "`outdir'/placebo_results_topq.dta", clear
+    use "$outdir/placebo_results_topq.dta", clear
     count
     local n_done = r(N)
     di "INCREMENTAL MODE: Found `n_done' completed units"
@@ -35,13 +69,13 @@ if `n_done' > 0 {
     * Append to existing file
     postfile `results' int(zip3_id) double(pre_rmspe post_rmspe ratio ///
         pre_gap_mean post_gap_mean final_gap) ///
-        using "`outdir'/placebo_results_new.dta", replace
+        using "$outdir/placebo_results_new.dta", replace
 }
 else {
     * Fresh start
     postfile `results' int(zip3_id) double(pre_rmspe post_rmspe ratio ///
         pre_gap_mean post_gap_mean final_gap) ///
-        using "`outdir'/placebo_results_topq.dta", replace
+        using "$outdir/placebo_results_topq.dta", replace
 
     * Create empty dataset for full series (long format)
     clear
@@ -50,13 +84,13 @@ else {
     gen double y_treated = .
     gen double y_synthetic = .
     gen double gap = .
-    save "`outdir'/placebo_series_long.dta", replace
+    save "$outdir/placebo_series_long.dta", replace
 }
 
 * ===========================================================================
 * First: Get Chicago's RMSPE from already-computed results
 * ===========================================================================
-use "`outdir'/synth_results.dta", clear
+use "$outdir/synth_results.dta", clear
 gen gap = _Y_treated - _Y_synthetic
 gen gap_sq = gap^2
 
@@ -85,15 +119,15 @@ post `results' (606) (`chicago_pre_rmspe') (`chicago_post_rmspe') (`chicago_rati
     (`chicago_pre_gap') (`chicago_post_gap') (`chicago_final_gap')
 
 * Add Chicago's series to long dataset
-use "`outdir'/synth_results.dta", clear
+use "$outdir/synth_results.dta", clear
 gen int zip3_id = 606
 gen gap = _Y_treated - _Y_synthetic
 rename _time month_num
 rename _Y_treated y_treated
 rename _Y_synthetic y_synthetic
 keep zip3_id month_num y_treated y_synthetic gap
-append using "`outdir'/placebo_series_long.dta"
-save "`outdir'/placebo_series_long.dta", replace
+append using "$outdir/placebo_series_long.dta"
+save "$outdir/placebo_series_long.dta", replace
 
 * ===========================================================================
 * Identify TOP QUARTILE units by pre-period usage
@@ -105,21 +139,21 @@ bysort zip3_id: gen n_months = _N
 keep if n_months == 21
 drop n_months
 
-* Compute pre-period mean log_users by unit
-bysort zip3_id: egen pre_mean_log = mean(log_users) if month_num < 10
+* Compute pre-period mean $outcome_var by unit
+bysort zip3_id: egen pre_mean_log = mean($outcome_var) if month_num < 10
 bysort zip3_id: egen pre_avg_log = max(pre_mean_log)
 drop pre_mean_log
 
-* Convert to users (exp of log)
-gen pre_avg_users = exp(pre_avg_log)
+* Convert to level (exp of log)
+gen pre_avg_outcome = exp(pre_avg_log)
 
 * Get 75th percentile
-quietly sum pre_avg_users, detail
+quietly sum pre_avg_outcome, detail
 local q75 = r(p75)
-di "Top quartile threshold: `q75' users/month"
+di "Top quartile threshold: `q75' ($outcome_label)"
 
 * Keep only top quartile
-keep if pre_avg_users >= `q75'
+keep if pre_avg_outcome >= `q75'
 
 * Get list of qualifying units
 levelsof zip3_id, local(top_units)
@@ -128,10 +162,10 @@ di "Top quartile units: `n_units'"
 
 * Save to file for reference
 preserve
-keep zip3_id zip3 pre_avg_users
+keep zip3_id zip3 pre_avg_outcome
 duplicates drop
-gsort -pre_avg_users
-export delimited using "`outdir'/placebo_valid_units.csv", replace
+gsort -pre_avg_outcome
+export delimited using "$outdir/placebo_valid_units.csv", replace
 restore
 
 * ===========================================================================
@@ -181,21 +215,21 @@ foreach unit of local top_units {
         tsset zip3_id month_num
 
         * Create pre-period means
-        bysort zip3_id: egen pre_early_tmp = mean(log_users) if inrange(month_num, 3, 6)
+        bysort zip3_id: egen pre_early_tmp = mean($outcome_var) if inrange(month_num, 3, 6)
         bysort zip3_id: egen pre_mean_early = max(pre_early_tmp)
         drop pre_early_tmp
 
-        bysort zip3_id: egen pre_late_tmp = mean(log_users) if inrange(month_num, 7, 9)
+        bysort zip3_id: egen pre_late_tmp = mean($outcome_var) if inrange(month_num, 7, 9)
         bysort zip3_id: egen pre_mean_late = max(pre_late_tmp)
         drop pre_late_tmp
 
         * Run synth (with pre_median_price matching)
-        capture synth log_users ///
+        capture synth $outcome_var ///
             pct_college pct_hh_100k pct_young ///
             median_age median_income pct_stem pct_broadband ///
             pre_mean_early pre_mean_late pre_median_price, ///
             trunit(`unit') trperiod(10) ///
-            keep("`outdir'/placebo_temp", replace)
+            keep("$outdir/placebo_temp", replace)
     }
 
     if _rc != 0 {
@@ -205,7 +239,7 @@ foreach unit of local top_units {
 
     * Compute RMSPE and signed gaps from results
     quietly {
-        use "`outdir'/placebo_temp.dta", clear
+        use "$outdir/placebo_temp.dta", clear
         gen gap = _Y_treated - _Y_synthetic
         gen gap_sq = gap^2
 
@@ -234,8 +268,8 @@ foreach unit of local top_units {
         rename _Y_treated y_treated
         rename _Y_synthetic y_synthetic
         keep zip3_id month_num y_treated y_synthetic gap
-        append using "`outdir'/placebo_series_long.dta"
-        save "`outdir'/placebo_series_long.dta", replace
+        append using "$outdir/placebo_series_long.dta"
+        save "$outdir/placebo_series_long.dta", replace
     }
 
     di "  pre=`pre_rmspe', post=`post_rmspe', ratio=`ratio', post_gap=`post_gap'"
@@ -250,17 +284,17 @@ postclose `results'
 * ===========================================================================
 if `n_done' > 0 {
     * Append new results to existing
-    use "`outdir'/placebo_results_topq.dta", clear
-    append using "`outdir'/placebo_results_new.dta"
-    save "`outdir'/placebo_results_topq.dta", replace
-    erase "`outdir'/placebo_results_new.dta"
+    use "$outdir/placebo_results_topq.dta", clear
+    append using "$outdir/placebo_results_new.dta"
+    save "$outdir/placebo_results_topq.dta", replace
+    erase "$outdir/placebo_results_new.dta"
     di "Merged new results with existing"
 }
 
 * ===========================================================================
 * Compute p-value
 * ===========================================================================
-use "`outdir'/placebo_results_topq.dta", clear
+use "$outdir/placebo_results_topq.dta", clear
 
 * Filter to good pre-fit (< 5x Chicago)
 local threshold = `chicago_pre_rmspe' * 5
@@ -290,4 +324,4 @@ di "P-VALUE: `pvalue'"
 di "========================================"
 restore
 
-save "`outdir'/placebo_results_topq.dta", replace
+save "$outdir/placebo_results_topq.dta", replace

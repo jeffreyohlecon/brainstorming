@@ -11,7 +11,7 @@ import numpy as np
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from load_chatgpt_data import get_output_dir, log
+from load_chatgpt_data import get_output_dir, get_exploratory_dir, get_outcome_label, log
 
 
 # Covariate display names for balance table
@@ -225,7 +225,7 @@ def main():
         macros.append(f"\\newcommand{{\\nTopDonors}}{{{len(top_donors)}}}")
 
     # Covariate balance from Stata log
-    repo_dir = Path(__file__).parent.parent
+    repo_dir = Path(__file__).parent.parent.parent  # code/analysis -> code -> repo root
     log_path = repo_dir / 'chicago_synth.log'
     balance = parse_covariate_balance(log_path)
     if balance:
@@ -293,7 +293,7 @@ def main():
         log(f"Placebo p-value: {pvalue:.3f} ({n_extreme}/{n_placebos})")
 
     # Write to file
-    memo_dir = Path(__file__).parent.parent / 'memos'
+    memo_dir = Path(__file__).parent.parent.parent / 'memos'
     out_path = memo_dir / 'synth_macros.tex'
     out_path.write_text("\n".join(macros))
     log(f"Wrote: {out_path}")

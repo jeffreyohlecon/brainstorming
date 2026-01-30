@@ -2,25 +2,6 @@
 
 Analysis of Chicago's 9% Personal Property Lease Transaction Tax (PPLTT) effect on ChatGPT subscriptions (Oct 2023).
 
-## Key Findings
-
-**Price pass-through**: Clear. Chicago median transaction jumps $20 → $21.20 at Oct 2023. Control areas stay flat at $20.
-
-**Quantity effect**: Confounded. Chicago tracks Manhattan perfectly in log(users). The SC "effect" appears to be a big-city phenomenon, not tax-specific.
-
-**Identification problem**: Manhattan (no new tax in Oct 2023, already taxed at ~8.5%) shows similar SC divergence. Big cities share confounds (Enterprise adoption, saturation) that smaller donors can't replicate.
-
-## Latest SC Results
-
-| Metric | Value |
-|--------|-------|
-| Pre-RMSPE | 0.027 |
-| Post-RMSPE | 0.148 |
-| RMSPE ratio | 5.56 |
-| Post-treatment gap | −0.118 (~11%) |
-| Top donors | LA (46%), Raleigh (17%), Wyoming (11%), Atlanta (11%) |
-| Placebo p-value | TBD (running) |
-
 ## Output Location
 
 All output: `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/`
@@ -87,6 +68,20 @@ python code/analysis/monitor_placebo.py  # Check progress
 | `chicago_synth_placebo_topq.do` | Placebo tests |
 | `memos/synth_macros.tex` | Auto-generated macros |
 
+## LaTeX Macros
+
+Scripts that generate `.tex` macro files for the memo:
+
+| Script | Output | In Pipeline? |
+|--------|--------|--------------|
+| `code/analysis/export_synth_results_tex.py` | `memos/synth_macros.tex` | ✅ Yes |
+| `code/exploratory/trans_per_user_macros.py` | `output/.../exploratory/trans_user_macros.tex` | ❌ Run separately |
+
+After placebos complete, regenerate plots:
+```bash
+PYTHONPATH=. python3 code/robustness/run_placebo_plots.py 2
+```
+
 ## Code Organization
 
 ### `code/analysis/` — Main SC Pipeline
@@ -106,15 +101,19 @@ python code/analysis/monitor_placebo.py  # Check progress
 |------|---------|
 | `panelize.py` | Creates constant individual panel (cardlinkids active in all 70-day windows). One-time preprocessing for replicability. |
 | `get_zip3_demographics.py` | Aggregates ACS demographics from ZCTA to ZIP3 |
+| `explore_tv_demographics.py` | Validates time-varying demographics file (`chatgpt_demographics_tv.parquet`) |
 
 ### `code/robustness/` — Robustness Checks
 
-| File | Purpose |
-|------|---------|
-| `run_placebo_plots.py` | **Run all placebo plots**: `python run_placebo_plots.py 2` (2x threshold) |
-| `plot_placebo_unit.py` | Plot SC for a single placebo unit: `python plot_placebo_unit.py 077` |
-| `chicago_sc_robustness.py` | Leave-k-out robustness checks |
-| `helpers/` | Internal scripts called by `run_placebo_plots.py` (don't run directly) |
+**Dependency**: `run_placebo_plots.py` requires `chicago_synth_placebo_topq.do` to have run first (generates `placebo_series_long.dta` and log file). Can run mid-job with partial results—use looser threshold (e.g., 20x) if few placebos complete.
+
+| File | Run? | Purpose |
+|------|------|---------|
+| `run_placebo_plots.py` | **Yes** | Entry point for placebo plots: `python run_placebo_plots.py 2` (2x threshold) |
+| `chicago_sc_robustness.py` | No | Stale. Was leave-k-out robustness; should be reimplemented in Stata. |
+| `helpers/plot_placebo_robustness.py` | No | Histogram + scatter plots (called by `run_placebo_plots.py`) |
+| `helpers/plot_placebo_spaghetti.py` | No | Gap time series plot (called by `run_placebo_plots.py`) |
+| `helpers/plot_placebo_unit.py` | No | Single-unit SC plot (called by `run_placebo_plots.py`) |
 
 ### `code/exploratory/` — Exploratory Analysis
 
@@ -146,19 +145,22 @@ python code/analysis/monitor_placebo.py  # Check progress
 - **Transactions**: `/Users/jeffreyohl/Dropbox/Gambling Papers and Data/CEdge data/`
 - **Demographics**: ACS 5-year 2022, ZCTA → ZIP3
 
-## TODO
+### ZIP3 Assignment Options
 
-- [x] Add pre_median_price matching
-- [ ] **Placebo tests with price matching** ← RUNNING (incremental, resumes on crash)
-- [x] Find other ZIP3s with tax changes (5% price jump) — only Chicago exceeds 5%; Manhattan +2.6%
+Two approaches for assigning ZIP3 to cardids. See [zip3_fixes.md](zip3_fixes.md) for details.
 
----
+| Method | File | Description |
+|--------|------|-------------|
+| **Snapshot** (current) | `chatgpt_card_info_2025_12_26.parquet` | ZIP3 from Dec 2025 card table snapshot. Simple but assigns current location, not location at transaction time. |
+| **Monthly modal** (new) | `cardid_monthly_zip3.parquet` | Modal ZIP3 per card-month from `cardid_address_map`. Merge on `[cardid, year_month]` to get ZIP3 at transaction time. Handles movers correctly. |
 
-## CURRENT MIGRATION: Flexible Outcome Variable (Jan 2026)
+**Current implementation**: Snapshot method. Monthly modal is validated and computing (Jan 30, 2026).
 
-**Full plan file**: `/Users/jeffreyohl/.claude/plans/abundant-bouncing-cherny.md`
+**Note**: Do NOT use `chatgpt_demographics_2023_2024_2025.csv` (contaminated) or raw `cardid_address_map` (has daily bouncing noise).
 
-**Goal**: Change outcome in ONE place (`load_chatgpt_data.py`) and all downstream inherits. No hardcoded column names.
+## Flexible Outcome Variable (Implemented Jan 2026)
+
+**Goal**: Change outcome in ONE place (`load_chatgpt_data.py`) and all downstream inherits.
 
 **Architecture**:
 ```
@@ -173,71 +175,26 @@ chicago_synth.do         ← Reads synth_config.do, uses $outcome_var
 plots, exports, etc.
 ```
 
-### What's Done
-- [x] `OUTCOME_VAR = OUTCOME_TRANSACTIONS` in load_chatgpt_data.py
-- [x] `get_exploratory_dir()` added
+### How to Switch Outcomes
 
-### What's Left
+1. Edit `load_chatgpt_data.py`: change `OUTCOME_VAR = OUTCOME_TRANSACTIONS` to `OUTCOME_VAR = OUTCOME_USERS`
+2. Run `python run_analysis.py` - all output goes to the appropriate folder
+3. Update `memos/synthetic_control_results.tex`: change `\figpath` from `trans` to `unique_users`
 
-**load_chatgpt_data.py**:
-- [ ] Add `get_log_outcome_column()` → returns `'log_users'` or `'log_trans'`
-- [ ] Add `get_outcome_label()` → returns `'Log Transactions'` or `'Log Unique Users'`
+### Key Functions (load_chatgpt_data.py)
 
-**export_synth_data.py**:
-- [ ] Add `log_trans = np.log(panel['n_trans'])` column
-- [ ] Write `data/synth_config.do` with Stata globals:
-  ```stata
-  global outcome_var "log_trans"
-  global outcome_label "Log Transactions"
-  ```
+| Function | Returns |
+|----------|---------|
+| `get_output_dir()` | `/output/{outcome}/15to25/all_merchants/` |
+| `get_exploratory_dir()` | `{output_dir}/exploratory/` |
+| `get_log_outcome_column()` | `'log_trans'` or `'log_users'` |
+| `get_outcome_label()` | `'Log Transactions'` or `'Log Unique Users'` |
 
-**chicago_synth.do** and **chicago_synth_placebo_topq.do**:
-- [ ] Add `include "data/synth_config.do"` at top
-- [ ] Replace all `log_users` with `$outcome_var`
+### Adding New Outcomes
 
-**Python scripts using hardcoded paths or `log_users`**:
-- [ ] `code/analysis/chicago_spaghetti_plot.py` - use `get_log_outcome_column()`
-- [ ] `code/analysis/export_synth_results_tex.py` - dynamic labels
-- [ ] `code/exploratory/quick_zip_compare.py` - use `get_log_outcome_column()`, `get_exploratory_dir()`
-- [ ] `code/exploratory/detect_tax_changes.py` - use `get_exploratory_dir()`
-- [ ] `code/plot_chicago_vs_rest.py` - use `get_exploratory_dir()`
-- [ ] `code/robustness/helpers/plot_placebo_unit.py` - use `get_output_dir()`
-- [ ] `code/robustness/helpers/plot_placebo_robustness.py` - use `get_output_dir()`
-- [ ] `code/robustness/helpers/plot_placebo_spaghetti.py` - use `get_output_dir()`
-
-**run_analysis.py** (extend pipeline):
-- [ ] Add `code/exploratory/detect_tax_changes.py`
-- [ ] Add `code/plot_chicago_vs_rest.py`
-- [ ] Add `code/robustness/run_placebo_plots.py 2` (if placebo results exist)
-
-**memos/synthetic_control_results.tex**:
-- [ ] Change `\figpath` from `unique_users` to `trans`
-- [ ] Update outcome description text
-
-### Verification
-- [ ] `trans/15to25/all_merchants/chicago_synth_stata.png` exists
-- [ ] `trans/15to25/all_merchants/exploratory/` has plots
-- [ ] Change `OUTCOME_VAR` back to `OUTCOME_USERS`, rerun → outputs go to `unique_users/`
-- [ ] `memos/synthetic_control_results.pdf` compiles
-
-### Cleanup
-- [ ] Delete `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/` (old flat folder)
-
----
-
-## Memo Automation
-
-**Goal**: `run_analysis.py` regenerates all results → memos compile with no hardcoded values.
-
-### Status
-
-| Component | Status |
-|-----------|--------|
-| `synth_macros.tex` | ✓ RMSPE, gap, donors |
-| `chicago_ppltt.tex` | ✓ Uses macros |
-| `synthetic_control_results.tex` | ✓ Uses macros |
-| Covariate balance | ✗ TODO: parse Stata log |
-| Placebo p-value | ✗ TODO: after tests |
+1. Add constant in `load_chatgpt_data.py` (e.g., `OUTCOME_SPEND = 'spend'`)
+2. Add case to `get_log_outcome_column()` and `get_outcome_label()`
+3. Add the log column in `export_synth_data.py`
 
 ### Compile Memos
 ```bash

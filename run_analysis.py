@@ -30,7 +30,19 @@ def run(cmd, desc):
 def main():
     quick = '--quick' in sys.argv
 
-    # Step 1: Export panel data
+    # Step 1: Export panel data (invalidates old placebo results)
+    from load_chatgpt_data import get_output_dir
+    outdir = get_output_dir()
+    placebo_files = [
+        outdir / 'placebo_results_topq.dta',
+        outdir / 'placebo_series_long.dta',
+        outdir / 'placebo_results_new.dta',
+    ]
+    for f in placebo_files:
+        if f.exists():
+            f.unlink()
+            print(f"Deleted stale: {f.name}")
+
     run('python3 code/analysis/export_synth_data.py', 'Export panel data to Stata')
 
     # Step 2: Run main synthetic control (skip if --quick)
@@ -42,18 +54,30 @@ def main():
     # Step 3: Extract donor weights from log
     run('python3 code/analysis/extract_donor_weights.py', 'Extract donor weights')
 
-    # Step 4: Generate figures
-    run('python3 plot_synth_with_o1.py', 'Plot SC with event lines')
-    run('python3 chicago_spaghetti_plot.py', 'Plot donor spaghetti')
+    # Step 4: Generate main SC figures
+    run('python3 code/analysis/plot_synth_with_o1.py', 'Plot SC with event lines')
+    run('python3 code/analysis/chicago_spaghetti_plot.py', 'Plot donor spaghetti')
 
-    # Step 5: Export LaTeX macros
+    # Step 5: Exploratory plots
+    run('python3 code/exploratory/detect_tax_changes.py', 'Detect tax changes')
+    run('python3 code/plot_chicago_vs_rest.py', 'Chicago vs rest raw plot')
+
+    # Step 6: Placebo robustness plots (if placebo results exist)
+    from load_chatgpt_data import get_output_dir
+    placebo_results = get_output_dir() / 'placebo_results_topq.dta'
+    if placebo_results.exists():
+        run('python3 code/robustness/run_placebo_plots.py 2', 'Placebo plots (2x)')
+    else:
+        print("\n[Skipping placebo plots - run placebo tests first]\n")
+
+    # Step 7: Export LaTeX macros
     run('python3 code/analysis/export_synth_results_tex.py', 'Export LaTeX macros')
 
     print("\n" + "="*60)
     print("  PIPELINE COMPLETE")
     print("="*60)
     print("\nTo compile memo:")
-    print("  cd memos && latexmk -pdf chicago_ppltt.tex")
+    print("  cd memos && latexmk -pdf synthetic_control_results.tex")
     print("\nTo run placebo tests (slow):")
     print(f"  {STATA} -b do chicago_synth_placebo_topq.do")
 

@@ -14,8 +14,11 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from pathlib import Path
 
-OUT_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness')
-DATA_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants')
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+from load_chatgpt_data import get_output_dir
+
+DATA_DIR = get_output_dir()
+OUT_DIR = DATA_DIR / 'synthetic_placebo_robustness'
 DERIVED_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/derived_data')
 
 # Threshold multiplier for pre-RMSPE filter (Abadie uses 2x, 5x, 20x)

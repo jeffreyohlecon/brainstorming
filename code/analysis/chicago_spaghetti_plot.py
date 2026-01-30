@@ -9,10 +9,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pathlib import Path
-from load_chatgpt_data import get_output_dir
+from load_chatgpt_data import get_output_dir, get_log_outcome_column, get_outcome_label
 
 # Output directory from settings
 outdir = get_output_dir()
+outcome_col = get_log_outcome_column()
+outcome_label = get_outcome_label()
 
 # Load panel data
 panel = pd.read_stata(Path('data/synth_panel.dta'))
@@ -43,21 +45,21 @@ if 'month_dt' in plot_data.columns:
 # Create figure
 fig, ax = plt.subplots(figsize=(12, 7))
 
-# Plot donor ZIP3s in gray (log users) with labels
+# Plot donor ZIP3s in gray with labels
 for zip3 in top_donors:
     df = plot_data[plot_data['zip3'] == zip3].sort_values('date')
-    ax.plot(df['date'], df['log_users'], color='gray', alpha=0.5, linewidth=1)
+    ax.plot(df['date'], df[outcome_col], color='gray', alpha=0.5, linewidth=1)
     # Label at end of line
     last_pt = df.iloc[-1]
-    ax.annotate(zip3, (last_pt['date'], last_pt['log_users']),
+    ax.annotate(zip3, (last_pt['date'], last_pt[outcome_col]),
                 fontsize=8, color='gray', va='center')
 
 # Plot Chicago in red on top
 chicago = plot_data[plot_data['zip3'] == '606'].sort_values('date')
-ax.plot(chicago['date'], chicago['log_users'], color='red', linewidth=2, label='Chicago (606)')
+ax.plot(chicago['date'], chicago[outcome_col], color='red', linewidth=2, label='Chicago (606)')
 # Label Chicago
 last_chi = chicago.iloc[-1]
-ax.annotate('606', (last_chi['date'], last_chi['log_users']),
+ax.annotate('606', (last_chi['date'], last_chi[outcome_col]),
             fontsize=8, color='red', fontweight='bold', va='center')
 
 # Add treatment line
@@ -71,8 +73,8 @@ plt.xticks(rotation=45, ha='right')
 
 # Labels
 ax.set_xlabel('')
-ax.set_ylabel('Log(Unique Users)')
-ax.set_title('ChatGPT Subscribers (Log)\n(Gray = top 10 SC donors, Red = Chicago)')
+ax.set_ylabel(outcome_label)
+ax.set_title(f'ChatGPT ({outcome_label})\n(Gray = top 10 SC donors, Red = Chicago)')
 ax.legend(loc='upper left')
 
 plt.tight_layout()

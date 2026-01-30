@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.1)  30 JAN 2026 11:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2025.10.1)  30 JAN 2026 15:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -159,26 +159,26 @@ Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
 Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
 Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
-) (./synth_macros.tex) (/usr/local/texlive/2025basic/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+) (./synth_macros.tex) (/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/trans_user_macros.tex) (/usr/local/texlive/2025basic/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2025-06-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count302
 ) (./synthetic_control_results.aux)
 \openout1 = `synthetic_control_results.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
-LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -262,92 +262,102 @@ LaTeX Warning: No \author given.
 [1
 
 {/usr/local/texlive/2025basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_synth_stata.png, id=13, 903.375pt x 542.025pt>
-File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_synth_stata.png Graphic file (type png)
-<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_synth_stata.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_synth_stata.png  used on input line 103.
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png, id=13, 903.375pt x 542.025pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png  used on input line 116.
 (pdftex.def)             Requested size: 422.77664pt x 253.66832pt.
-
-
-[2 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_synth_stata.png>]
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_spaghetti_donors.png, id=20, 867.24pt x 505.89pt>
-File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_spaghetti_donors.png Graphic file (type png)
-<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_spaghetti_donors.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_spaghetti_donors.png  used on input line 149.
-(pdftex.def)             Requested size: 422.77664pt x 246.6223pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
+LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3]
-Overfull \hbox (1.03471pt too wide) in paragraph at lines 175--182
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png, id=15, 867.24pt x 505.89pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png  used on input line 162.
+(pdftex.def)             Requested size: 422.77664pt x 246.6223pt.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[2]
+Overfull \hbox (1.03471pt too wide) in paragraph at lines 188--195
 \OT1/cmr/m/n/10.95 2023 vs. Novem-ber 2024) re-veals Man-hat-tan shows a []+2.6%[] price increase---second only to Chicago's
  []
 
 
 
-[4 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/chicago_spaghetti_donors.png>]
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png, id=29, 867.24pt x 505.89pt>
-File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png Graphic file (type png)
-<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png  used on input line 233.
+[3 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_synth_stata.png>]
+
+LaTeX Warning: Reference `fig:077_price' on page 4 undefined on input line 229.
+
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png, id=24, 867.24pt x 505.89pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png  used on input line 246.
 (pdftex.def)             Requested size: 422.77664pt x 246.6223pt.
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png, id=30, 722.7pt x 433.62pt>
-File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png Graphic file (type png)
-<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png  used on input line 244.
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+
+[4]
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png, id=30, 722.7pt x 433.62pt>
+File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png Graphic file (type png)
+<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png>
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png  used on input line 257.
 (pdftex.def)             Requested size: 422.77664pt x 253.66338pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-
-[5 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png>]
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png, id=36, 859.5312pt x 711.6186pt>
+</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png, id=31, 859.5312pt x 711.6186pt>
 File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png Graphic file (type png)
 <use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png  used on input line 266.
+Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png  used on input line 279.
 (pdftex.def)             Requested size: 469.75502pt x 388.92657pt.
 
-
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-</Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/median_price_077.png, id=37, 714.9912pt x 424.4658pt>
-File: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/median_price_077.png Graphic file (type png)
-<use /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/median_price_077.png>
-Package pdftex.def Info: /Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/median_price_077.png  used on input line 278.
-(pdftex.def)             Requested size: 422.77664pt x 250.98965pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[6 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png>]
+[5 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/chicago_spaghetti_donors.png>]
 
-[7 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png>]
+[6 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_spaghetti_2x.png> </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/trans/15to25/all_merchants/synthetic_placebo_robustness/placebo_histogram_2x.png>]
 
-[8 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/median_price_077.png>] (./synthetic_control_results.aux)
+[7 </Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory/zip3_price_change_funnel.png>] (./synthetic_control_results.aux)
  ***********
 LaTeX2e <2025-06-01> patch level 1
 L3 programming layer <2025-09-02>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 3732 strings out of 469220
- 63228 string characters out of 5462268
- 475428 words of memory out of 5000000
- 32170 multiletter control sequences out of 15000+600000
+ 3743 strings out of 469220
+ 62945 string characters out of 5462268
+ 477673 words of memory out of 5000000
+ 32177 multiletter control sequences out of 15000+600000
  635322 words of font info for 66 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  59i,9n,67p,495b,238s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/jeffreyohl/Library/texlive/2025basic/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2025basic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on synthetic_control_results.pdf (8 pages, 794013 bytes).
+Output written on synthetic_control_results.pdf (7 pages, 529009 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
- 52 compressed objects within 1 object stream
+ 90 PDF objects out of 1000 (max. 8388607)
+ 50 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

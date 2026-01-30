@@ -4,7 +4,7 @@ Monitor placebo tests in real-time. Shows running p-value as units complete.
 Run with: python3 monitor_placebo.py
 Or watch mode: watch -n 5 python3 monitor_placebo.py
 
-Uses TOP QUARTILE placebo run (>=42 users/month pre-treatment).
+Uses TOP QUARTILE placebo run (by pre-treatment outcome level).
 """
 
 import re
@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from load_chatgpt_data import get_output_dir
+from load_chatgpt_data import get_output_dir, get_outcome_label
 
 
 def get_chicago_stats():
@@ -74,8 +74,9 @@ def main():
     # Get Chicago stats from synth_results.dta
     chi_pre, chi_post, chi_ratio = get_chicago_stats()
 
+    outcome_label = get_outcome_label()
     print("=" * 60)
-    print("PLACEBO MONITOR - TOP QUARTILE (>=42 users/month)")
+    print(f"PLACEBO MONITOR - TOP QUARTILE ({outcome_label})")
     print("=" * 60)
     print(f"Completed units: {len(results)} / ~211")
     print()
