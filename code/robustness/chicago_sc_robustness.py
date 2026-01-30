@@ -12,7 +12,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from load_chatgpt_data import load_with_zip3, log, get_output_dir, get_filter_title
+from config import log, get_output_dir, get_filter_title
+from load_data import load_with_zip3
 
 TREATED_ZIP = '606'
 START_DATE = '2023-03-01'

@@ -6,7 +6,7 @@ Plot synth results with both treatment line (Oct 2023) and o1 release line (Sep 
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from load_chatgpt_data import get_output_dir
+from config import get_output_dir
 
 # Output directory from settings
 outdir = get_output_dir()

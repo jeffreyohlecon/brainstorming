@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-from load_chatgpt_data import get_output_dir, get_outcome_label
+from config import get_output_dir, get_outcome_label
 
 if len(sys.argv) != 2:
     print("Usage: python plot_placebo_unit.py ZIP3")

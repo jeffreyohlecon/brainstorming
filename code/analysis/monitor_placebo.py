@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from load_chatgpt_data import get_output_dir, get_outcome_label
+from config import get_output_dir, get_outcome_label
 
 
 def get_chicago_stats():

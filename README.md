@@ -4,7 +4,12 @@ Analysis of Chicago's 9% Personal Property Lease Transaction Tax (PPLTT) effect 
 
 ## Output Location
 
-All output: `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/unique_users/15to25/all_merchants/`
+All output: `/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/`
+
+**Folder structure principle**: Save output at exactly its level of sample specificity—no higher, no lower.
+- Sample-specific (e.g., SC for trans/15to25): `output/trans/15to25/all_merchants/`
+- Data validation (not sample-specific): `output/` root
+- Exploratory for a sample: `output/.../exploratory/`
 
 No local output folder in this repo.
 
@@ -63,7 +68,8 @@ python code/analysis/monitor_placebo.py  # Check progress
 | File | Purpose |
 |------|---------|
 | `run_analysis.py` | Master pipeline script |
-| `load_chatgpt_data.py` | Shared data loading + settings |
+| `config.py` | Settings + path functions |
+| `load_data.py` | Data loading (imports from config) |
 | `chicago_synth.do` | Main SC |
 | `chicago_synth_placebo_topq.do` | Placebo tests |
 | `memos/synth_macros.tex` | Auto-generated macros |
@@ -102,6 +108,8 @@ PYTHONPATH=. python3 code/robustness/run_placebo_plots.py 2
 | `panelize.py` | Creates constant individual panel (cardlinkids active in all 70-day windows). One-time preprocessing for replicability. |
 | `get_zip3_demographics.py` | Aggregates ACS demographics from ZCTA to ZIP3 |
 | `explore_tv_demographics.py` | Validates time-varying demographics file (`chatgpt_demographics_tv.parquet`) |
+| `compute_monthly_zip3.py` | Modal ZIP3 per card-month from address_map. See [zip3_fixes.md](zip3_fixes.md). |
+| `visualize_row_distribution.py` | CDF + raw vs coarsened ZIP timeline examples → `output/address_row_*.png` |
 
 ### `code/robustness/` — Robustness Checks
 
@@ -144,6 +152,14 @@ PYTHONPATH=. python3 code/robustness/run_placebo_plots.py 2
 
 - **Transactions**: `/Users/jeffreyohl/Dropbox/Gambling Papers and Data/CEdge data/`
 - **Demographics**: ACS 5-year 2022, ZCTA → ZIP3
+- **Extraction scripts**: `sb_incidence/code/cedge_scripts/` — see `jeff_read_me.md` there for Mercury extraction workflow
+
+**Key extraction scripts** (run on Mercury, output to Dropbox):
+| Script | Output | Purpose |
+|--------|--------|---------|
+| `extract_card_table.py` | `chatgpt_card_info_*.parquet` | Card table with ZIP3 |
+| `extract_timevarying_demographics.py` | `chatgpt_demographics_tv.parquet` | Address map with valid dates |
+| `extract_panel_data.py` | `activity_dates_*.parquet` | For 70-day constant panel |
 
 ### ZIP3 Assignment Options
 
@@ -154,17 +170,21 @@ Two approaches for assigning ZIP3 to cardids. See [zip3_fixes.md](zip3_fixes.md)
 | **Snapshot** (current) | `chatgpt_card_info_2025_12_26.parquet` | ZIP3 from Dec 2025 card table snapshot. Simple but assigns current location, not location at transaction time. |
 | **Monthly modal** (new) | `cardid_monthly_zip3.parquet` | Modal ZIP3 per card-month from `cardid_address_map`. Merge on `[cardid, year_month]` to get ZIP3 at transaction time. Handles movers correctly. |
 
-**Current implementation**: Snapshot method. Monthly modal is validated and computing (Jan 30, 2026).
+**Current implementation**: Snapshot method. Monthly modal is validated but not yet integrated.
+
+**Validation plots**: `python code/data_prep/visualize_row_distribution.py` → `output/address_row_*.png` (raw vs monthly modal comparison).
 
 **Note**: Do NOT use `chatgpt_demographics_2023_2024_2025.csv` (contaminated) or raw `cardid_address_map` (has daily bouncing noise).
 
 ## Flexible Outcome Variable (Implemented Jan 2026)
 
-**Goal**: Change outcome in ONE place (`load_chatgpt_data.py`) and all downstream inherits.
+**Goal**: Change outcome in ONE place (`config.py`) and all downstream inherits.
 
 **Architecture**:
 ```
-load_chatgpt_data.py     ← Single source of truth (OUTCOME_VAR setting)
+config.py                ← Single source of truth (OUTCOME_VAR setting)
+        ↓
+load_data.py             ← Data loading (imports from config)
         ↓
 run_analysis.py          ← Master pipeline
         ↓
@@ -177,11 +197,11 @@ plots, exports, etc.
 
 ### How to Switch Outcomes
 
-1. Edit `load_chatgpt_data.py`: change `OUTCOME_VAR = OUTCOME_TRANSACTIONS` to `OUTCOME_VAR = OUTCOME_USERS`
+1. Edit `config.py`: change `OUTCOME_VAR = OUTCOME_TRANSACTIONS` to `OUTCOME_VAR = OUTCOME_USERS`
 2. Run `python run_analysis.py` - all output goes to the appropriate folder
 3. Update `memos/synthetic_control_results.tex`: change `\figpath` from `trans` to `unique_users`
 
-### Key Functions (load_chatgpt_data.py)
+### Key Functions (config.py)
 
 | Function | Returns |
 |----------|---------|
@@ -192,7 +212,7 @@ plots, exports, etc.
 
 ### Adding New Outcomes
 
-1. Add constant in `load_chatgpt_data.py` (e.g., `OUTCOME_SPEND = 'spend'`)
+1. Add constant in `config.py` (e.g., `OUTCOME_SPEND = 'spend'`)
 2. Add case to `get_log_outcome_column()` and `get_outcome_label()`
 3. Add the log column in `export_synth_data.py`
 

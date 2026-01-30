@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from load_chatgpt_data import get_exploratory_dir, get_log_outcome_column, get_outcome_label
+from config import get_exploratory_dir, get_log_outcome_column, get_outcome_label
 
 if len(sys.argv) != 3:
     print("Usage: python quick_zip_compare.py ZIP1 ZIP2")

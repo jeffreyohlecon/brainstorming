@@ -12,7 +12,8 @@ import matplotlib.dates as mdates
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from load_chatgpt_data import load_with_zip3, log
+from config import log
+from load_data import load_with_zip3
 
 OUT_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory')
 OUT_DIR.mkdir(parents=True, exist_ok=True)

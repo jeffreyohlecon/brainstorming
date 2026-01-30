@@ -3,7 +3,7 @@
 
 import sys
 sys.path.insert(0, '/Users/jeffreyohl/Documents/GitHub/brainstorming')
-from load_chatgpt_data import load_with_zip3
+from load_data import load_with_zip3
 
 trans = load_with_zip3()
 

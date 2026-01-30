@@ -11,7 +11,7 @@ import pandas as pd
 
 # Add parent directory for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from load_chatgpt_data import DATA_DIR
+from config import DATA_DIR
 
 
 def main():

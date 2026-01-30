@@ -11,9 +11,8 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from load_chatgpt_data import (
-    load_with_zip3, get_exploratory_dir, log
-)
+from config import get_exploratory_dir, log
+from load_data import load_with_zip3
 
 def main():
     # Load data

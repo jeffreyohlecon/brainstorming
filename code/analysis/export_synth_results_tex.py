@@ -11,7 +11,7 @@ import numpy as np
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from load_chatgpt_data import get_output_dir, get_exploratory_dir, get_outcome_label, log
+from config import get_output_dir, get_exploratory_dir, get_outcome_label, log
 
 
 # Covariate display names for balance table

@@ -9,7 +9,7 @@ import pandas as pd
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from load_chatgpt_data import get_output_dir, log
+from config import get_output_dir, log
 
 # ZIP3 to area name mapping
 ZIP3_NAMES = {

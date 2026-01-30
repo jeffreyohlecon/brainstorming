@@ -28,7 +28,7 @@ The `cardid_address_map` has garbage A→B→A bouncing (data source conflicts b
 
 1. ✅ Re-extracted card table WITH ZIP on Mercury (Dec 26, 2025 snapshot, 901,911 cardlinkids)
 2. ✅ Updated `load_chatgpt_data.py` to use `chatgpt_card_info_2025_12_26.parquet`
-3. 🔲 Re-run analyses with corrected ZIP3 assignments (pending)
+3. ✅ Re-ran pipeline with corrected ZIP3 (ratio=8.96, gap=-10%)
 
 ## Known Limitation
 
@@ -64,7 +64,9 @@ To handle the daily bouncing noise in address_map, compute **modal ZIP3 per card
 Script: `code/data_prep/compute_monthly_zip3.py`
 Output: `cardid_monthly_zip3.parquet` with columns `[cardid, year_month, zip3]`
 
-**Validation plot**: `bouncer_zip3_timeseries.png` shows 5 high-bounce cardids. Pattern:
+**Validation plots**: Run `python code/data_prep/visualize_row_distribution.py` → `output/address_row_*.png` (CDF + raw vs monthly modal examples).
+
+**Bouncer plot**: `bouncer_zip3_timeseries.png` shows 5 high-bounce cardids. Pattern:
 - Pre-2023: stable (100% modal confidence)
 - Late 2022 - 2023: bouncing noise (modal picks winner each month)
 - 2024+: stabilizes again

@@ -17,7 +17,29 @@ import numpy as np
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-from load_chatgpt_data import load_with_zip3, log
+from config import log
+from load_data import load_with_zip3
+
+# ZIP3 to area name mapping (extended for labeling)
+ZIP3_NAMES = {
+    '606': 'Chicago, IL',
+    '337': 'St. Petersburg, FL',
+    '100': 'Manhattan, NY',
+    '112': 'Brooklyn, NY',
+    '210': 'Baltimore, MD',
+    '836': 'Brownsville, TX',
+    '294': 'Charleston, SC',
+    '803': 'Columbia, SC',
+    '301': 'Atlanta, GA',
+    '220': 'N. Virginia',
+    '890': 'Las Vegas, NV',
+    '923': 'San Bernardino, CA',
+    '900': 'Los Angeles, CA',
+    '277': 'Raleigh, NC',
+    '303': 'Atlanta, GA',
+    '943': 'Palo Alto, CA',
+    '077': 'Long Branch, NJ',
+}
 
 OUT_DIR = Path('/Users/jeffreyohl/Dropbox/LLM_PassThrough/output/exploratory')
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -112,11 +134,29 @@ def create_funnel_plot(df):
 
     bars = ax.barh(y_pos, df['pct_change'], color=colors, alpha=0.7)
 
-    # Add ZIP3 labels for extremes
+    # Get top 3 and bottom 3 indices
+    top3_idx = set(range(3))
+    bot3_idx = set(range(n - 3, n))
+
+    # Find Chicago's index
+    chicago_idx = None
+    for i, zip3 in enumerate(df['zip3']):
+        if zip3 == '606':
+            chicago_idx = i
+            break
+
+    # Indices to label
+    label_idx = top3_idx | bot3_idx
+    if chicago_idx is not None and chicago_idx not in label_idx:
+        label_idx.add(chicago_idx)
+
+    # Add labels with actual names for top 3, bottom 3, and Chicago
     for i, (zip3, pct) in enumerate(zip(df['zip3'], df['pct_change'])):
-        if pct >= TAX_THRESHOLD_PCT or pct <= -TAX_THRESHOLD_PCT:
+        if i in label_idx:
+            name = ZIP3_NAMES.get(zip3, zip3)
+            label_text = f"{zip3} ({name})"
             offset = 0.3 if pct > 0 else -0.3
-            ax.text(pct + offset, i, zip3, va='center', fontsize=7,
+            ax.text(pct + offset, i, label_text, va='center', fontsize=7,
                     ha='left' if pct > 0 else 'right')
 
     ax.axvline(0, color='black', linewidth=0.5)
@@ -132,7 +172,7 @@ def create_funnel_plot(df):
 
     # Hide y ticks (too many)
     ax.set_yticks([])
-    ax.legend(loc='lower right')
+    ax.legend(loc='upper right')
     ax.grid(axis='x', alpha=0.3)
 
     plt.tight_layout()

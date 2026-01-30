@@ -15,7 +15,7 @@ from scipy import stats
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-from load_chatgpt_data import get_output_dir
+from config import get_output_dir
 
 DATA_DIR = get_output_dir()
 OUT_DIR = DATA_DIR / 'synthetic_placebo_robustness'

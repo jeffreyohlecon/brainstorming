@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pathlib import Path
-from load_chatgpt_data import get_output_dir, get_log_outcome_column, get_outcome_label
+from config import get_output_dir, get_log_outcome_column, get_outcome_label
 
 # Output directory from settings
 outdir = get_output_dir()

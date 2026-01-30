@@ -31,7 +31,7 @@ def main():
     quick = '--quick' in sys.argv
 
     # Step 1: Export panel data (invalidates old placebo results)
-    from load_chatgpt_data import get_output_dir
+    from config import get_output_dir
     outdir = get_output_dir()
     placebo_files = [
         outdir / 'placebo_results_topq.dta',
@@ -63,7 +63,7 @@ def main():
     run('python3 code/plot_chicago_vs_rest.py', 'Chicago vs rest raw plot')
 
     # Step 6: Placebo robustness plots (if placebo results exist)
-    from load_chatgpt_data import get_output_dir
+    from config import get_output_dir
     placebo_results = get_output_dir() / 'placebo_results_topq.dta'
     if placebo_results.exists():
         run('python3 code/robustness/run_placebo_plots.py 2', 'Placebo plots (2x)')

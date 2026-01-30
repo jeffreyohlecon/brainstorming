@@ -3,7 +3,8 @@
 
 import sys
 sys.path.insert(0, '/Users/jeffreyohl/Documents/GitHub/brainstorming')
-from load_chatgpt_data import load_with_zip3, get_output_dir
+from config import get_output_dir
+from load_data import load_with_zip3
 import matplotlib.pyplot as plt
 import pandas as pd
 

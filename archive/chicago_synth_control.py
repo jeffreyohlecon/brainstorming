@@ -13,7 +13,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pathlib import Path
-from load_chatgpt_data import load_with_zip3, log, get_filter_suffix, get_filter_title, get_outcome_column
+from config import log, get_filter_suffix, get_filter_title, get_outcome_column
+from load_data import load_with_zip3
 
 OUTPUT_DIR = Path(__file__).parent
 
