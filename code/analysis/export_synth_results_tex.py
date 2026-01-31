@@ -23,9 +23,9 @@ COVARIATE_NAMES = {
     'median_income': 'Median income',
     'pct_stem': r'\% STEM',
     'pct_broadband': r'\% broadband',
-    'pre_mean_early': None,  # Set dynamically based on outcome
-    'pre_mean_late': None,   # Set dynamically based on outcome
-    'pre_mean_price': 'Mean price (pre)',
+    'pre_mean_early': 'Log users (Mar--Jun)',
+    'pre_mean_late': 'Log users (Jul--Sep)',
+    'pre_median_price': 'Median price (pre)',
 }
 
 # ZIP3 to area name mapping (for donor weights table)
@@ -232,15 +232,8 @@ def main():
         macros.append("")
         macros.append("% Covariate balance")
         balance_rows = []
-        outcome_label = get_outcome_label()  # e.g., "Log Transactions"
         for varname, treated, synthetic in balance:
-            # Dynamic labels for pre-period outcome means
-            if varname == 'pre_mean_early':
-                display_name = f'{outcome_label} (Mar--Jun)'
-            elif varname == 'pre_mean_late':
-                display_name = f'{outcome_label} (Jul--Sep)'
-            else:
-                display_name = COVARIATE_NAMES.get(varname, varname)
+            display_name = COVARIATE_NAMES.get(varname, varname)
             # Format: income in thousands, others as-is
             if varname == 'median_income':
                 balance_rows.append(
@@ -252,7 +245,7 @@ def main():
                     f"{display_name} & {treated*100:.1f}\\% "
                     f"& {synthetic*100:.1f}\\% \\\\"
                 )
-            elif varname == 'pre_mean_price':
+            elif varname == 'pre_median_price':
                 balance_rows.append(
                     f"{display_name} & \\${treated:.2f} "
                     f"& \\${synthetic:.2f} \\\\"

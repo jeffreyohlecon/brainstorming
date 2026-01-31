@@ -67,6 +67,7 @@ python3 code/analysis/monitor_placebo.py
 
 ## Backlog
 
+- [ ] **Auxiliary subscriptions placebo** — Extract Netflix + Spotify from Consumer Edge; run same synth control. If they also decline in Chicago, that's bad (confounder). See [auxiliary_subscriptions.md](auxiliary_subscriptions.md) for Mercury scripts.
 - [ ] **Covariate validation OLS** — Run pooled OLS of pre-period log(outcome) on demographics across all ZIP3s. Shows which covariates actually predict ChatGPT adoption (à la Abadie Table 1). May justify dropping redundant covariates (college/income likely collinear).
 - [ ] **Robustness: transactions per panel member** — Normalize outcome by number of constant-panel cardholders per ZIP3 (like Abadie's "per capita" normalization).
 - [x] **Monthly ZIP3 from address_map** — See [zip3_fixes.md](zip3_fixes.md) for full details. Script running, validated on bouncers.

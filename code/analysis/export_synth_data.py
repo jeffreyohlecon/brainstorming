@@ -12,8 +12,8 @@ Output: data/synth_panel.dta
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from config import log, get_log_outcome_column, get_outcome_label, get_output_dir
-from load_data import load_with_zip3
+from load_chatgpt_data import (load_with_zip3, log, get_log_outcome_column,
+                               get_outcome_label, get_output_dir)
 
 TREATED_ZIP = '606'
 START_DATE = '2023-03-01'
@@ -55,16 +55,12 @@ def main():
     monthly['treated'] = (monthly['zip3'] == TREATED_ZIP).astype(int)
     monthly['post'] = (monthly['month_num'] >= treatment_month).astype(int)
 
-    # Pre-period mean price: simple mean of all transaction amounts per ZIP3
-    # (Independent of outcome variable - always want to match on price for tax exposure)
-    pre_trans = trans[
-        (trans['trans_date'] >= '2023-03-01') &
-        (trans['trans_date'] < '2023-10-01')
-    ]
-    pre_mean_price = pre_trans.groupby('zip3')['trans_amount'].mean().reset_index()
-    pre_mean_price.columns = ['zip3', 'pre_mean_price']
-    monthly = monthly.merge(pre_mean_price, on='zip3', how='left')
-    log(f"Added pre_mean_price for {len(pre_mean_price)} ZIP3s")
+    # Pre-period median price (months 3-9, Mar-Sep 2023)
+    pre_period = monthly[(monthly['month_num'] >= 3) & (monthly['month_num'] <= 9)]
+    pre_median_price = pre_period.groupby('zip3')['median_price'].mean().reset_index()
+    pre_median_price.columns = ['zip3', 'pre_median_price']
+    monthly = monthly.merge(pre_median_price, on='zip3', how='left')
+    log(f"Added pre_median_price for {len(pre_median_price)} ZIP3s")
 
     # Load demographics
     demo_path = Path(__file__).parent.parent.parent / 'data' / 'zip3_demographics_acs2022.parquet'
@@ -104,7 +100,7 @@ def main():
         'zip3', 'zip3_id', 'month_num', 'month_dt',
         'n_users', 'log_users', 'n_trans', 'log_trans',
         'users_pc', 'total_spend',
-        'median_price', 'pre_mean_price',
+        'median_price', 'pre_median_price',
         'treated', 'post',
         'pct_college', 'pct_hh_100k', 'pct_young',
         'median_age', 'median_income', 'pct_stem', 'pct_broadband',
@@ -133,7 +129,7 @@ def main():
     print(f"  pct_college:      {chi['pct_college']:.3f}")
     print(f"  pct_hh_100k:      {chi['pct_hh_100k']:.3f}")
     print(f"  pct_young:        {chi['pct_young']:.3f}")
-    print(f"  pre_mean_price:   ${chi['pre_mean_price']:.2f}")
+    print(f"  pre_median_price: ${chi['pre_median_price']:.2f}")
 
     # Save ZIP3 ID mapping for reference
     map_df = pd.DataFrame([
